@@ -1,0 +1,89 @@
+Usuario:
+    type: entity
+    table: usuario
+    id:
+        idUsuario:
+            type: string
+            nullable: false
+            length: 8
+            fixed: false
+            comment: ''
+            id: true
+            column: id_usuario
+            generator:
+                strategy: IDENTITY
+    fields:
+        matricula:
+            type: string
+            nullable: false
+            length: 8
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: false
+            length: 16
+            fixed: false
+            comment: ''
+        primerAp:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: primer_ap
+        segundoAp:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: segundo_ap
+        email:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        password:
+            type: string
+            nullable: false
+            length: 32
+            fixed: false
+            comment: ''
+        fechaAlta:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_alta
+        salt:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToMany:
+        idCartera:
+            targetEntity: Cartera
+            cascade: {  }
+            mappedBy: idUsuario
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+        idProspecto:
+            targetEntity: Prospecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: idUsuario
+            joinTable:
+                name: prospectos_seleccionados
+                joinColumns:
+                    -
+                        name: id_usuario
+                        referencedColumnName: id_usuario
+                inverseJoinColumns:
+                    -
+                        name: id_prospecto
+                        referencedColumnName: id_prospecto
+            orderBy: null
+    lifecycleCallbacks: {  }

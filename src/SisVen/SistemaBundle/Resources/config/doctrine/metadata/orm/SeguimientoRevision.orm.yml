@@ -1,0 +1,53 @@
+SeguimientoRevision:
+    type: entity
+    table: seguimiento_revision
+    indexes:
+        fk_seguimiento_revision_seguimiento_plan1_idx:
+            columns:
+                - id_seguimiento_plan
+    id:
+        idSeguimientoRevision:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_seguimiento_revision
+            generator:
+                strategy: IDENTITY
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        fechaHora:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_hora
+        estado:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: 'este es el estado de la revision, puede estar asociada a la acción solicitada'
+        solicitadaAccion:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: 'si es que la revisión solicita que el responsable registre una acción una vez ejecutada la revisión'
+            column: solicitada_accion
+    manyToOne:
+        idSeguimientoPlan:
+            targetEntity: SeguimientoPlan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_seguimiento_plan:
+                    referencedColumnName: id_seguimiento_plan
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

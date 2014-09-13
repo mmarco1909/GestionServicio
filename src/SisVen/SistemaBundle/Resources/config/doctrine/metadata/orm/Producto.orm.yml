@@ -1,0 +1,29 @@
+Producto:
+    type: entity
+    table: producto
+    id:
+        idProducto:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_producto
+            generator:
+                strategy: IDENTITY
+    fields:
+        codProducto:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_producto
+        producto:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,205 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+No Exitosos
+{% endblock %}
+
+{% block stylesheets %}  
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";  
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";   
+    @import "../../public/css/start/jquery-ui-1.10.4.custom.css";  
+
+    table.menu {
+        font-size:12px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #908d8d;
+        border-collapse: collapse;}
+    table.menu th {
+        font-size:12px;
+        background-color:#c0c0c0;
+        border-width: 1px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #908d8d;}
+    table.menu th.activo {
+        font-size:12px;
+        background-color:#f0f0f0;
+        border-width: 1px;
+        padding: 2px;
+        border-bottom: #f0f0f0;
+    }
+    table.menu tr {background-color:#f2efef;}
+    table.menu td {font-size:12px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+
+    
+    
+</style>
+{% endblock %}
+
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+<hr class="linea" />
+<div style="width: 100%">
+    <div style="float: left; width: 20px">&nbsp</div>  
+    <div style="float: left">        
+        <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+        <div class="txt1">Ejecutivo: {{ app.user.nombre }} {{ app.user.primerAp }}</div>        
+    </div>
+    <div style="float: right; width: 50px">&nbsp</div>   
+    <div style="float: right">
+        <div class="txt1">                          
+            <form id="SelectProsp" name="SelectProsp" method="post">                                   
+                Producto:                                 
+                <select id="ProdSel" name="ProdSel">              
+                            {% render url('producto_listar', {'id_prod': producto}) %}
+                </select>                        
+            </form>                                
+            <a href="{{ path('usuario_logout') }}" class = "boton">Cerrar sesión</a>
+        </div>  
+    </div>       
+</div>
+
+<div style="clear: both"></div>
+<hr style="color: #0056b2;" />
+
+<table class="menu">
+    <tr>
+        <th><a href="{{ path("prospectos_index", {'id_prod': 'TRA'}) }}">Cartera Servicio</a></th>
+        <th><a href="{{ path("prospectos_icontactos", {'id_prod': 'TRA'}) }}">Programar citas</a></th>
+        <th><a href="{{ path("prospectos_icitas", {'id_prod': 'TRA'}) }}">Actualizar gestion</a></th>
+        <th><a href="{{ path("prospectos_icierres", {'id_prod': 'TRA'}) }}">Registrar cambios cartera</a></th>
+        <th class="activo">Validar resultados</th>
+    </tr>
+</table>
+
+<div style="background: #f0f0f0">
+    <table width="100%">
+        <tr>
+            <td><div class="txt3">No Exitosos</div></td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>            
+    </table>
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>              
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_no_exitoso">                    
+        <thead>
+            <tr>
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>MUR</th>
+                <th>AFP</th>
+                <th>RUC</th>
+                <th>Empresa</th>  
+                <th>Acciones</th>  
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>                           
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>MUR</th>
+                <th>AFP</th>
+                <th>RUC</th>
+                <th>Empresa</th> 
+                <th>Acciones</th>  
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}   
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+
+<script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+
+
+<script type="text/javascript" charset="utf-8">
+
+    $(document).ready(function() {
+        
+        $('.boton').button();
+        /*************************DataTables************************************************/
+        var calcDataTableHeight = function() {
+            return Math.floor($(window).height() * 60 / 100);
+        };
+ 
+        var url_no_exitoso = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '5','id_estado': '5'}) }}';
+        url_no_exitoso = url_no_exitoso.replace("v_prod", '{{producto}}');
+        var oTable = $('#p_no_exitoso').dataTable({
+            "sScrollY": calcDataTableHeight(),
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            "bJQueryUI": true,
+            "aoColumnDefs": [
+                {"sWidth": "10%", "aTargets": [-1]}
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": url_no_exitoso
+        });
+
+      
+        $(window).resize(function() {
+            var oSettings = oTable.fnSettings();
+            oSettings.oScroll.sY = calcDataTableHeight();
+            oTable.fnDraw();
+        });
+
+
+        /*************************************User Interaction*******************************/
+
+        $('#ProdSel').on('change', function() {
+            var url = '{{ path('prospectos_index', {'id_prod': 'v_prod'}) }}';
+            url = url.replace("v_prod", $('#ProdSel').val());
+            location.href = url;
+        });
+
+ 
+
+    });
+
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+Distrito:
+    type: entity
+    table: distrito
+    indexes:
+        fk_distrito_provincia1_idx:
+            columns:
+                - id_provincia
+        fk_distrito_departamento1_idx:
+            columns:
+                - id_departamento
+    id:
+        idDistrito:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+            id: true
+            column: id_distrito
+            generator:
+                strategy: IDENTITY
+    fields:
+        codDistrito:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_distrito
+        distrito:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        idProvincia:
+            targetEntity: Provincia
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_provincia:
+                    referencedColumnName: id_provincia
+            orphanRemoval: false
+        idDepartamento:
+            targetEntity: Departamento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_departamento:
+                    referencedColumnName: id_departamento
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

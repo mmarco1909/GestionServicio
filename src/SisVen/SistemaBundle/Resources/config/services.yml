@@ -1,0 +1,11 @@
+# src/SisVen/SistemaBundle/Resources/config/services.yml
+parameters:
+
+# usuario.example.class: SisVen\SistemaBundle\Example
+services:
+    login_listener:
+        class: SisVen\SistemaBundle\Listener\LoginListener
+        arguments: [@router, @service_container]
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login }
+            - { name: kernel.event_listener, event: kernel.response }

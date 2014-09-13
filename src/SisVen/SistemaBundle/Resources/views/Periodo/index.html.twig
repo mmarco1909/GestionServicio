@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Periodo list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Anio</th>
+                <th>Mes</th>
+                <th>Diaslaborables</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('periodo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.anio }}</td>
+                <td>{{ entity.mes }}</td>
+                <td>{{ entity.diasLaborables }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('periodo_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

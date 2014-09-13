@@ -1,0 +1,359 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+Reportes Supervisor
+{% endblock %}
+
+{% block stylesheets %}  
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";  
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";  
+    @import "../../public/css/start/jquery-ui-1.10.4.custom.css";  
+    @import "../../public/css/jquery.fullcalendar.css"; 
+    @import "../../public/css/jquery.fullcalendar.print.css";     
+
+    @import "../../public/css/jquery.timepicker.css"; 
+
+    .ui-tabs .ui-tabs-panel { padding: 5px }  
+
+    .ui-front {
+        z-index:9999 !important; /* The default is 100. !important overrides the default. */
+    }
+
+    #calendar { margin:20px 0px 0px 0px;  }
+
+    .c_traspaso,
+    .c_traspaso div,
+    .c_traspaso span {
+        background-color: blue; /* background color */
+        border-color: blue;     /* border color */
+        color: white;           /* text color */
+        font-weight: bold;
+    }
+    
+    .c_naranja,
+    .c_naranja div,
+    .c_naranja span {
+        background-color: orange; /* background color */
+        border-color: orange;     /* border color */
+        color: white;           /* text color */
+        font-weight: bold;
+    }
+
+    .c_verde,
+    .c_verde div,
+    .c_verde span {
+        background-color: green; /* background color */
+        border-color: green;     /* border color */
+        color: white;           /* text color */
+        font-weight: bold;
+    }
+    
+    .c_rojo,
+    .c_rojo div,
+    .c_rojo span {
+        background-color: red; /* background color */
+        border-color: red;     /* border color */
+        color: white;           /* text color */
+        font-weight: bold;
+    }
+
+    /*Modal Dialog*/
+    table {font-size: 1em;}
+    .demo-description {
+        clear: both;
+        padding: 12px;
+        font-size: 1.3em;
+        line-height: 1.4em;
+    }
+    .ui-draggable, .ui-droppable {
+        background-position: top;
+    } 
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }       
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+    .campo_oculto{visibility: hidden}
+    .campo_visible{visibility: visible}      
+
+    table.menu {
+        font-size:12px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #908d8d;
+        border-collapse: collapse;}
+    table.menu th {
+        font-size:12px;
+        background-color:#c0c0c0;
+        border-width: 1px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #908d8d;}
+    table.menu th.activo {
+        font-size:12px;
+        background-color:#f0f0f0;
+        border-width: 1px;
+        padding: 2px;
+        border-bottom: #f0f0f0;
+    }
+    table.menu tr {background-color:#f2efef;}
+    table.menu td {font-size:12px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+   
+</style>
+{% endblock %}
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+<hr class="linea" />
+<div style="width: 100%">
+    <div style="float: left; width: 20px">&nbsp</div>  
+    <div style="float: left">        
+        <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+        <div class="txt1">Supervisor: {{ app.user.nombre }} {{ app.user.primerAp }}</div>        
+    </div>
+    <div style="float: right; width: 50px">&nbsp</div>   
+    <div style="float: right">
+        <div class="txt1">                          
+            <form id="SelectProsp" name="SelectProsp" method="post">                                   
+                Producto:                                 
+                <select id="ProdSel" name="ProdSel">              
+                            {% render url('producto_listar', {'id_prod': producto}) %}
+                </select>                        
+            </form>                                
+            <a href="{{ path('usuario_logout') }}">Cerrar sesión</a>
+        </div>  
+    </div>       
+</div>
+
+<div style="clear: both"></div>
+<hr style="color: #0056b2;" />
+
+<div style="background: #f0f0f0">
+    <table width="100%">
+        <tr>
+            <td><div class="txt3">RESUMEN GENERAL</div></td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>            
+    </table>
+    <table>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>              
+    
+    <div id="citas">                        
+                        <div id="tabs2">
+                            <ul>
+                                <li><a href="#citas_listado">Vista Listado</a></li>                       
+                                <li><a href="#citas_calendario">Vista Calendario</a></li>
+                            </ul>
+                            <div id="citas_listado">
+                                <div style="float: left; width: 100%;">
+                                <div style="float: left; width: 400px; height: 55px;">
+                                    <div style="float: left; width: 100%; height: 34px;">
+                                        <h1>Avance de la producción del mes</h1>
+                                    </div>                                    
+                                </div>
+                                <div style="float: right;">
+                                    <div style="height: 32px">&nbsp;</div>
+                                    </div>
+                                    <div style="float: right; text-align: center; width: 350px;">
+                                    <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Selección</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="NroSeleccionados" style="font-size: 20px">0</div>                                  
+                                            </div>
+                                        </div>      
+                                        <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Avance</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="AvanceProsp" style="font-size: 12px">&nbsp;</div>                                  
+                                            </div>
+                                        </div>
+                                        <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Cumplimiento</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="CumpProsp" style="font-size: 20px">&nbsp;</div>                                  
+                                            </div>
+                                        </div>    
+                                    </div>                    
+                                </div>
+                                <br>
+                                <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_citas_listado">                    
+                                    <thead>
+                                        <tr>
+                                            <th>Matricula</th>
+                                            <th>Ejecutivo</th>  
+                                            <th>Prospectos</th>  
+                                            <th>Seleccionados</th>  
+                                            <th>Visitas</th> 
+                                            <th>Cierres</th>
+                                            <th>RAM</th>
+                                            <th>Meta</th>
+                                            <th>Avance</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>                           
+                                            <th>Matricula</th>
+                                            <th>Ejecutivo</th>  
+                                            <th>Prospectos</th>  
+                                            <th>Seleccionados</th>  
+                                            <th>Visitas</th> 
+                                            <th>Cierres</th>
+                                            <th>RAM</th>
+                                            <th>Meta</th>
+                                            <th>Avance</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div id="citas_calendario">
+                                <div id="loading" style='display:none'>loading...</div>
+                                <div id="calendar"></div>
+                            </div>
+
+                        </div>   
+                    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}   
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery-ui-tabs.js"></script>
+<script type="text/javascript" language="javascript" src='../../public/js/jquery.fullcalendar.min.js'></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.timepicker.min.js"></script>
+
+<script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+
+
+<script type="text/javascript" charset="utf-8">
+
+
+    $(document).ready(function() {
+
+        /****************************************Calendar*******************************/
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        $('#calendar').fullCalendar({
+            theme: true,
+            height: 450,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            timeFormat: {
+                agenda: 'h:mm{ - h:mm}',
+                '': 'h(:mm)t'
+            },
+            monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+            buttonText: {
+                today: 'hoy',
+                month: 'mes',
+                week: 'semana',
+                day: 'día'
+            },
+            editable: false,
+            events: {{ render(controller('SistemaBundle:Supervisor:agenda')) }},
+            loading: function(bool) {
+                if (bool)
+                    $('#loading').show();
+                else
+                    $('#loading').hide();
+            }
+        });
+        /************************************************Tabs***************************************/
+        $("#tabs").tabs({
+            "show": function(event, ui) {
+                var table = $.fn.dataTable.fnTables(true);
+                if (table.length > 0) {
+                    $(table).dataTable().fnAdjustColumnSizing();
+                }
+            }
+        });
+        $("#tabs2").tabs({
+            "show": function(event, ui) {
+                var table = $.fn.dataTable.fnTables(true);
+                if (table.length > 0) {
+                    $(table).dataTable().fnAdjustColumnSizing();
+                }
+            }
+        });
+        /*************************DataTables************************************************/
+        var calcDataTableHeight = function() {
+            return Math.floor($(window).height() * 60 / 100);
+        };
+
+        var url_citas_listado = '{{ path("equipo_listar", {'id_prod': 'v_prod', 'matricula': 'v_matricula'}) }}';
+        url_citas_listado = url_citas_listado.replace("v_prod", '{{producto}}');
+        url_citas_listado = url_citas_listado.replace("v_matricula", '{{matricula}}');
+        var oTable = $('#p_citas_listado').dataTable({
+            "sScrollY": calcDataTableHeight(),
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            "bJQueryUI": true,
+            "aoColumnDefs": [
+                {"sWidth": "10%", "aTargets": [-1]}
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": url_citas_listado
+        });
+
+        $(window).resize(function() {
+            var oSettings = oTable.fnSettings();
+            oSettings.oScroll.sY = calcDataTableHeight();
+            oTable.fnDraw();
+        });
+
+
+        /*************************************User Interaction*******************************/
+
+        $('#ProdSel').on('change', function() {
+            var url = '{{ path('prospectos_index', {'id_prod': 'v_prod'}) }}';
+            url = url.replace("v_prod", $('#ProdSel').val());
+            location.href = url;
+        });
+        
+        $("#contact-action").click(function() {
+            //alert('aqui');
+        });
+
+    });
+
+</script>
+
+
+{% endblock %}

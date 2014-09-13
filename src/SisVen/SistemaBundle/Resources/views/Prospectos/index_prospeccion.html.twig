@@ -1,0 +1,455 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+Prospectos no Seleccionados
+{% endblock %}
+
+{% block stylesheets %}  
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";  
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";  
+    @import "../../public/css/start/jquery-ui-1.10.4.custom.css";  
+
+    .ui-front {
+        z-index:9999 !important; /* The default is 100. !important overrides the default. */
+    }
+
+    /*Modal Dialog*/
+    table {font-size: 1em;}
+    .demo-description {
+        clear: both;
+        padding: 12px;
+        font-size: 1.3em;
+        line-height: 1.4em;
+    }
+    .ui-draggable, .ui-droppable {
+        background-position: top;
+    } 
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }       
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+    .campo_oculto{visibility: hidden}
+    .campo_visible{visibility: visible}      
+
+    table.menu {
+        font-size:12px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #908d8d;
+        border-collapse: collapse;}
+    table.menu th {
+        font-size:12px;
+        background-color:#c0c0c0;
+        border-width: 1px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #908d8d;}
+    table.menu th.activo {
+        font-size:12px;
+        background-color:#f0f0f0;
+        border-width: 1px;
+        padding: 2px;
+        border-bottom: #f0f0f0;
+    }
+    table.menu tr {background-color:#f2efef;}
+    table.menu td {font-size:12px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+   
+</style>
+{% endblock %}
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+<hr class="linea" />
+<div style="width: 100%">
+    <div style="float: left; width: 20px">&nbsp</div>  
+    <div style="float: left">        
+        <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+        <div class="txt1">Ejecutivo: {{ app.user.nombre }} {{ app.user.primerAp }}</div>        
+    </div>
+    <div style="float: right; width: 50px">&nbsp</div>   
+    <div style="float: right">
+        <div class="txt1">                          
+            <a href="{{ path('usuario_logout') }}" class = "boton">Cerrar sesión</a>
+        </div>  
+    </div>       
+</div>
+
+<div style="clear: both"></div>
+<hr style="color: #0056b2;" />
+
+<div id="dialog-form" title="Agregar Prospecto">
+    <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+    <form id="f_busca_prospecto">
+        <fieldset>
+            <table cellpadding="2px">
+                <tr>
+                    <td><label for="cuspp">Cuspp (*)</label></td>
+                    <td><input type="text" name="cuspp" id="cuspp" value="" maxlength="15" size="15"></td>
+                    <td><button id="btnBuscarCuspp" class="boton">Buscar</button></td>
+                </tr>                         
+                <tr><td>Ram (*)</td><td><div id="div_ram"></div><input type='text' name='ram' id='ram' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Afp (*)</td><td><div id="div_afp"></div>
+                        <select id="afp" name="afp">              
+                            {% render url('afp_listar') %}
+                        </select> 
+                    </td><td></td></tr>
+                <tr><td>Primer Nombre</td><td><div id="div_primer_nm"></div><input type='text' name='primer_nm' id='primer_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Segundo Nombre</td><td><div id="div_segundo_nm"></div><input type='text' name='segundo_nm' id='segundo_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Apellido Paterno</td><td><div id="div_primer_ap"></div><input type='text' name='primer_ap' id='primer_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Apellido Materno</td><td><div id="div_segundo_ap"></div><input type='text' name='segundo_ap' id='segundo_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Ruc</td><td><div id="div_ruc"></div><input type='text' name='ruc' id='ruc' value='' maxlength='15' size='15'></td><td></td></tr>
+            </table>                        
+        </fieldset>
+    </form>
+    <table>
+        <tr><td colspan="2"><div id="div_mensaje"></div></td></tr>
+    </table> 
+</div>
+
+<table class="menu">
+    <tr>
+        <th class="activo">Cartera Servicio</th>
+        <th><a href="{{ path("prospectos_icontactos", {'id_prod': 'TRA'}) }}">Programar citas</a></th>
+        <th><a href="{{ path("prospectos_icitas", {'id_prod': 'TRA'}) }}">Actualizar gestion</a></th>
+        <th><a href="{{ path("prospectos_icierres", {'id_prod': 'TRA'}) }}">Registrar cambios cartera</a></th>
+        <th><a href="{{ path("prospectos_inoexitosos", {'id_prod': 'TRA'}) }}">Validar resultados</a></th>
+    </tr>
+</table>
+
+<div style="background: #f0f0f0">
+    <table width="100%">
+        <tr>
+            <td><div class="txt3">Mercado Potencial</div></td>
+            <td>
+                <table align="right" width="50%">
+                    <tr align="center">
+                        <td><div>Selección</div></td>
+                        <td><div>Avance</div></td>
+                        <td><div>Cumplimiento</div></td>                            
+                    </tr>
+                    <tr align="center">
+                        <td><div><div id="NroSeleccionados" style="font-size: 20px">0</div></div></td>
+                        <td><div><div id="AvanceProsp" style="font-size: 12px">&nbsp;</div> </div></td>
+                        <td><div><div id="CumpProsp" style="font-size: 20px">&nbsp;</div>  </div></td>                            
+                    </tr>
+                </table>
+            </td>
+        </tr>            
+    </table>
+    <table>
+        <tr>
+            <td>
+                <button id="btnGrabar" class="boton">Grabar Prospectos Seleccionados</button>
+                <button id="create-user" class="boton">Agregar Nuevo Prospecto</button>
+            </td>
+        </tr>
+    </table>              
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_potencial">                    
+        <thead>
+            <tr>
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>MUR</th>
+                <th>AFP</th>
+                <th>RUC</th>
+                <th>Empresa</th>  
+                <th>Acciones</th>  
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>                           
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>MUR</th>
+                <th>AFP</th>
+                <th>RUC</th>
+                <th>Empresa</th> 
+                <th>Acciones</th>  
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block javascripts %}   
+<script src="../../public/js/jquery-1.10.2.js"></script>
+{# <script src="../../public/js/jquery-ui-1.10.4.custom.js"></script>
+#}
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.timepicker.min.js"></script>
+
+<script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    var cumplimiento = jQuery.parseJSON('{{ render(controller('SistemaBundle:Prospectos:avance')) }}');
+    document.getElementById('AvanceProsp').innerHTML = cumplimiento.avance + ' de ' + cumplimiento.meta;
+    document.getElementById('CumpProsp').innerHTML = cumplimiento.cumplimiento + '%';
+    $(document).ready(function() {
+        
+        $('.boton').button();
+        /*************************DataTables************************************************/
+        var calcDataTableHeight = function() {
+            return Math.floor($(window).height() * 60 / 100);
+        };
+        var aSelected = [];
+        var url_prosp = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '0','id_estado': '1'}) }}';
+        url_prosp = url_prosp.replace("v_prod", '{{producto}}');
+        var oTable = $('#p_potencial').dataTable({
+            "sScrollY": calcDataTableHeight(),
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            "bJQueryUI": true,
+            "aoColumnDefs": [
+                {"sWidth": "10%", "aTargets": [-1]}
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": url_prosp,
+            "fnRowCallback"
+                    : function(nRow, aData, iDisplayIndex) {
+                        if (jQuery.inArray(aData.DT_RowId, aSelected) !== -1) {
+                            $(nRow).addClass('row_selected');
+                        }
+                    }
+        });        
+        $('#p_potencial tbody tr').live('click', function() {
+            var id = this.id;
+            var index = jQuery.inArray(id, aSelected);
+            if (index === -1) {
+                aSelected.push(id);
+                document.getElementById('NroSeleccionados').innerHTML = aSelected.length;
+            } else {
+                aSelected.splice(index, 1);
+                document.getElementById('NroSeleccionados').innerHTML = aSelected.length;
+            }
+            $(this).toggleClass('row_selected');
+        });
+        
+        $(window).resize(function() {
+            var oSettings = oTable.fnSettings();
+            oSettings.oScroll.sY = calcDataTableHeight();
+            oTable.fnDraw();
+        });
+
+
+        /*************************************User Interaction*******************************/
+        $('#ProdSel').on('change', function() {
+            var url = '{{ path('prospectos_index', {'id_prod': 'v_prod'}) }}';
+            url = url.replace("v_prod", $('#ProdSel').val());
+            location.href = url;
+        });
+        
+        $("#btnGrabar").click(function() {
+            if (document.getElementById('NroSeleccionados').innerHTML > 0) {
+            var url = '{{ path("prospectos_grabar_seleccion", {'producto': 'v_prod', 'ids_prospectos': 'v_pros'}) }}';
+            url = url.replace("v_pros", aSelected);
+            url = url.replace("v_prod", $('#ProdSel').val());
+            location.href = url;
+            } else {alert("Debe seleccionar al menos un prospecto")}
+        });
+        
+        $("#create-user").click(function() {
+            $("#dialog-form").dialog("open");
+            $("#ram").hide();
+            $("#afp").hide();
+            $("#primer_nm").hide();
+            $("#segundo_nm").hide();
+            $("#primer_ap").hide();
+            $("#segundo_ap").hide();
+            $("#ruc").hide();
+        });
+        
+        $("#btnBuscarCuspp").click(function() {
+            var url_prosp = '{{ path("prospectos_buscar", {'producto': 'v_producto', 'cuspp': 'v_cuspp'}) }}';
+            url_prosp = url_prosp.replace("v_cuspp", $('#cuspp').val());
+            url_prosp = url_prosp.replace("v_producto", '{{producto}}');
+            $.ajax({
+                type: "POST",
+                url: url_prosp,
+                cache: true,
+                success: function(html) {
+                    var prospecto = jQuery.parseJSON(html);
+                    $("#div_ram").html(prospecto.ram);
+                    $("#div_afp").html(prospecto.afp);
+                    $("#div_primer_nm").html(prospecto.primer_nm);
+                    $("#div_segundo_nm").html(prospecto.segundo_nm);
+                    $("#div_primer_ap").html(prospecto.primer_ap);
+                    $("#div_segundo_ap").html(prospecto.segundo_ap);
+                    $("#div_ruc").html(prospecto.ruc);
+                    $("#ram").val(prospecto.ram);
+                    $("#afp").val(prospecto.afp);
+                    $("#primer_nm").val(prospecto.primer_nm);
+                    $("#segundo_nm").val(prospecto.segundo_nm);
+                    $("#primer_ap").val(prospecto.primer_ap);
+                    $("#segundo_ap").val(prospecto.segundo_ap);
+                    $("#ruc").val(prospecto.ruc);
+                    if (prospecto.encontrado == '1') {
+                        $("#ram").hide();
+                        $("#afp").hide();
+                        $("#primer_nm").hide();
+                        $("#segundo_nm").hide();
+                        $("#primer_ap").hide();
+                        $("#segundo_ap").hide();
+                        $("#ruc").hide();
+                        $("#div_mensaje").html('Prospecto Encontrado');
+                        return false;
+                    } else {
+                        $("#ram").show();
+                        $("#afp").show();
+                        $("#primer_nm").show();
+                        $("#segundo_nm").show();
+                        $("#primer_ap").show();
+                        $("#segundo_ap").show();
+                        $("#ruc").show();
+                        $("#div_mensaje").html('Prospecto NO Encontrado. Por favor ingreses sus datos');
+                        return true;
+                    }
+
+                }
+            });
+            return false;
+        });
+        /********************************Modal Dialog***********************************/
+        var cuspp = $("#cuspp"),
+                ram = $("#ram"),
+                afp = $("#afp"),
+                primer_nm = $("#primer_nm"),
+                segundo_nm = $("#segundo_nm"),
+                primer_ap = $("#primer_ap"),
+                segundo_ap = $("#segundo_ap"),
+                ruc = $("#ruc"),
+                allFields = $([]).add(cuspp).add(ram).add(afp),
+                tips = $(".validateTips"),
+                hideFields = $([]).add(ram).add(afp)
+                .add(primer_nm).add(segundo_nm)
+                .add(primer_ap).add(segundo_ap).add(ruc);
+        function updateTips(t) {
+            tips.text(t).addClass("ui-state-highlight");
+        }
+
+        function checkLength(o, n, min, max) {
+            if (o.val().length > max || o.val().length < min) {
+                o.addClass("ui-state-error");
+                updateTips("El campo " + n + " debe de tener mínimo " +
+                        min + " caracteres y máximo " + max + ".");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function checkRegexp(o, regexp, n) {
+            if (!(regexp.test(o.val()))) {
+                o.addClass("ui-state-error");
+                updateTips(n);
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function isEmpty(val) {
+            return (val === undefined || val == null || val.length <= 0) ? 'x$_x' : val;
+        }
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 380,
+            width: 440,
+            modal: true,
+            buttons: {
+                "Agregar Prospecto": function() {
+                    var bValid = true;
+                    //PRIMERO LO BUSCA?? pendiente                            
+                    allFields.removeClass("ui-state-error");
+                    bValid = bValid && checkLength(cuspp, "Cuspp", 12, 12);
+                    bValid = bValid && checkLength(ram, "Ram", 1, 15);
+                    bValid = bValid && checkLength(afp, "Afp", 2, 15);
+                    bValid = bValid && checkLength(ruc, "Ruc", 11, 11);
+                    bValid = bValid && checkRegexp(primer_nm, /^[a-z]([a-z ])+$/i, "El campo Primer Nombre sólo puede contener letras");
+                    bValid = bValid && checkRegexp(segundo_nm, /^[a-z]([a-z ])+$/i, "El campo Segundo Nombre sólo puede contener letras");
+                    bValid = bValid && checkRegexp(primer_ap, /^[a-z]([a-z ])+$/i, "El campo Primer Apellido sólo puede contener letras");
+                    bValid = bValid && checkRegexp(segundo_ap, /^[a-z]([a-z ])+$/i, "El campo Segundo Apellido sólo puede contener letras");
+                    bValid = bValid && checkRegexp(cuspp, /^([0-9a-zA-Z])+$/, "El campo Cuspp sólo puede contener letras y números");
+                    bValid = bValid && checkRegexp(ram, /^([0-9])+$/, "El campo Ram sólo puede contener números");
+                    bValid = bValid && checkRegexp(afp, /^([0-9a-zA-Z])+$/, "Afp field only allow : a-z 0-9");
+                    bValid = bValid && checkRegexp(ruc, /^([0-9])+$/, "El campo RUC sólo puede contener números");
+                    if (bValid) {
+                        //alert($('#ProdSel').val() + cuspp.val() + ram.val() + afp.val());
+                        var url = '{{ path("prospectos_agregar", {'producto': 'v_prod', 'cuspp': 'v_cuspp', 'ram':'v_ram', 'afp':'v_afp', 'primer_nm':'v_primer_nm', 'segundo_nm':'v_segundo_nm', 'primer_ap':'v_primer_ap', 'segundo_ap':'v_segundo_ap', 'ruc':'v_ruc'}) }}';
+                        url = url.replace("v_prod", $('#ProdSel').val());
+                        url = url.replace("v_cuspp", cuspp.val());
+                        url = url.replace("v_ram", ram.val());
+                        url = url.replace("v_afp", afp.val());
+                        url = url.replace("v_primer_nm", $('#primer_nm').val());
+                        url = url.replace("v_segundo_nm", $('#segundo_nm').val());
+                        url = url.replace("v_primer_ap", $('#primer_ap').val());
+                        url = url.replace("v_segundo_ap", $('#segundo_ap').val());
+                        url = url.replace("v_ruc", $('#ruc').val());
+                        location.href = url;
+                        //$(this).dialog("close");
+                    }
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $("#div_ram").html('');
+                $("#div_afp").html('');
+                $("#div_primer_nm").html('');
+                $("#div_segundo_nm").html('');
+                $("#div_primer_ap").html('');
+                $("#div_segundo_ap").html('');
+                $("#div_ruc").html('');
+                $("#ram").show();
+                $("#afp").show();
+                $("#primer_nm").show();
+                $("#segundo_nm").show();
+                $("#primer_ap").show();
+                $("#segundo_ap").show();
+                $("#ruc").show();
+                $("#div_mensaje").html('');
+                tips.text('').removeClass("ui-state-highlight");
+                allFields.val("").removeClass("ui-state-error");
+            }
+        });
+
+
+    });
+
+
+
+</script>
+
+
+{% endblock %}

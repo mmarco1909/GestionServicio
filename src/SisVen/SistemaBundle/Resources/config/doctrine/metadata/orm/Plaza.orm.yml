@@ -1,0 +1,55 @@
+Plaza:
+    type: entity
+    table: plaza
+    indexes:
+        fk_plaza_region1_idx:
+            columns:
+                - id_region
+        fk_plaza_dpto1_idx:
+            columns:
+                - id_dpto
+    id:
+        idPlaza:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_plaza
+            generator:
+                strategy: IDENTITY
+    fields:
+        codPlaza:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_plaza
+        plaza:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Las plazas son las agrupaciones de los departamentos/provincias'
+    manyToOne:
+        idRegion:
+            targetEntity: Region
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_region:
+                    referencedColumnName: id_region
+            orphanRemoval: false
+        idDpto:
+            targetEntity: Dpto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_dpto:
+                    referencedColumnName: id_dpto
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

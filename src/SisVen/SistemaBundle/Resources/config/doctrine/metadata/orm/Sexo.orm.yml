@@ -1,0 +1,21 @@
+Sexo:
+    type: entity
+    table: sexo
+    id:
+        idSexo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_sexo
+            generator:
+                strategy: IDENTITY
+    fields:
+        sexo:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

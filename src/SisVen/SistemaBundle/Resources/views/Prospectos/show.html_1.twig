@@ -1,0 +1,350 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+Detalle del Prospecto
+{% endblock %}
+
+
+{% block stylesheets %} 
+<style type="text/css">
+    @import "../../public/css/ui-lightness/jquery-ui-1.10.4.custom.css";  
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color:#333;
+    background: #CCCCCC;
+    z-index: 1;
+}
+
+h3 {
+    text-transform:capitalize;
+    font-family:Arial, Helvetica, sans-serif;
+}
+p {
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+    padding: 10px;
+}
+
+#wrapper {
+    width: 1000px;
+}
+
+#header {
+    float: left;
+    height: 75px;
+    width: 1000px;
+    color: #FFFFFF;
+    background: #0C054D;
+}
+
+#content {
+    float: left;
+    background: #CCCCCC;
+//    background: #DCEBFA;
+    width: 500px;
+}
+
+#leftcolumn {
+    background: #CCCCCC;
+//    background: #DCEBFA;
+    width: 500px;
+    float: left;
+}
+
+#footer {
+    height: 40px;
+    width: 1000px;
+    background: #33FF66;
+    clear: both;
+}    
+
+    table.tftable {font-size:16px;color:#333333;width:100%;border-width: 1px;border-color: #908d8d;border-collapse: collapse;}
+    table.tftable th {font-size:14px;background-color:#c0c0c0;border-width: 1px;padding: 2px;border-style: solid;border-color: #908d8d;}
+    table.tftable tr {background-color:#f2efef;}
+    table.tftable td {font-size:14px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+ 
+
+	#capaVentana {
+		visibility:hidden;
+		position:absolute;
+		padding:0px;
+		left:100px;
+		top:100px;
+		z-index:3;
+	}
+	#capaFondo1 {
+		visibility:hidden;
+		position:absolute;
+		padding:0px;
+		left:0px;
+		top:0px;
+		right:0px;
+		bottom:0px;
+		background-image:url(trans01.gif);
+		background-repeat:repeat;
+		width:100%;
+		height:596px;
+		z-index:2;
+	}
+	#capaFondo2 {
+		visibility:hidden;
+		position:absolute;
+		padding:0px;
+		left:0px;
+		top:0px;
+		right:0px;
+		bottom:0px;
+		background-image:url(trans02.gif);
+		background-repeat:repeat;
+		width:100%;
+		height:596px;
+		z-index:2;
+	}
+	#capaFondo3 {
+		visibility:hidden;
+		position:absolute;
+		padding:0px;
+		left:0px;
+		top:0px;
+		right:0px;
+		bottom:0px;
+		background-image:url(trans03.gif);
+		background-repeat:repeat;
+		width:100%;
+		height:596px;
+		z-index:2;
+	}    
+
+</style>
+{% endblock %}
+
+
+
+{% block body -%}
+<div id="wrapper">
+<div id="header">
+    <table>   
+        <tr>                                   
+            <td><button id="btnGrabar" class="boton">Ingresar Gestión</button></td>
+            <td><button id="btnGrabar" class="boton">Agregar Teléfono</button></td>
+            <td><button id="btnGrabar" class="boton">Agregar Mail</button></td>      
+            <td><button onclick="window.history.back();" class="boton">Salir</button></td>
+        </tr> 
+        <tr>
+            <a href="javascript:ventanaSecundaria('http://www.desarrolloweb.com')"> Pincha en este enlace para abrir la ventana secundaria</a> 
+            <a href="javascript:abrirVentana('1');">Simulacro de ventana Emergente 1</a>
+            <a href="javascript:abrirVentana('2');">Simulacro de ventana Emergente 2</a>
+            <a href="javascript:abrirVentana('3');">Simulacro de tercer Emergente 3</a>
+        </tr>
+    </table> 
+    <h3>{{ entity.primerNm }} {{ entity.segundoNm }} {{ entity.primerAp }} {{ entity.segundoAp }}</h3>
+
+</div>
+
+    
+<div id="leftcolumn">
+    <!--    <table id="tfhover1" class="tftable" border="1"> -->
+    <h3>Informacion General</h3>
+    <table>
+        <tr><th width="20%" align="left">Cuspp</th><td>{{ entity.cuspp }}</td></tr>
+        <tr><th align="left">Sexo</th><td>{{ entity.sexo }}</td></tr>
+        <tr><th align="left">Fecha Nacimiento</th><td>{{ entity.fecNacimiento|date('d-m-Y') }}</td></tr>
+        <tr><th align="left">Documento</th><td>{{ entity.tipdoc }} - {{ entity.numdoc }}</td></tr>
+        <tr><th align="left">Murciélago</th><td>{{ entity.rangoRam }}</td></tr>
+        <tr><th align="left">Empresa</th><td>{{ entity.ruc }} - {{ entity.empresa }}</td></tr>    
+        <tr><th align="left">Telefonos</th><td>Query a tabla telefonos</td></tr>
+        <tr><th align="left">Mails</th><td>Query a tabla mails</td></tr>
+    </table>
+</div>
+
+
+    
+<div id="content">
+    <h3>Estado Actual</h3>
+    <!--    <table id="tfhover2" class="tftable" border="1"> -->
+        <table>
+            <tr><th width="40%" align="left">Estado del Prospecto</th><td>{{ entity.procesoestado }}</td></tr>
+            <tr><th width="40%" align="left">Resultado</th><td>{{ entity.procesoresultado }}</td></tr>
+            <tr><th width="40%" align="left">Motivo</th><td>{{ entity.procesomotivo }}</td></tr>
+            <tr><th width="40%" align="left">Fecha Siguiente Acción</th><td>{{ entity.gestfechasiguiente|date("d/m/Y") }}</td></tr>
+            <tr><th width="40%" align="left">Hora Siguiente Acción</th><td>{{ entity.gestfechasiguiente|date("H:i") }}</td></tr>
+            <tr><th width="40%" align="left">Lugar</th><td>{{ entity.gestlugar }}</td></tr>
+            <tr><th width="40%" align="left">Afp</th><td>{{ entity.gestafp }}</td></tr>
+            <tr><th width="40%" align="left">Ram</th><td>{{ entity.gestram }}</td></tr>
+        </table>
+</div>
+
+<div id="header">
+    <h3>Gestiones Realizadas</h3>
+<!--    <table id="tfhover3" class="tftable" border="1"> -->
+    <table id="tfhover3" class="tftable" border="1">
+            <th>Fecha de Gestión</th>
+            <th>Hora de Gestión</th>
+            <th>Etapa</th>    
+            <th>Resultado</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>Lugar</th>
+            <th>Afp</th>
+            <th>Ram</th>
+            <th>Fecha de Registro</th>
+            <th>Hora de Registro</th>
+        {% render url('prospectos_bitacora', {'cuspp': entity.cuspp }) %}
+    <!--    <tr><th>Fecha</th><th>Etapa</th><th>Acción</th><th>Resultado</th><th>Motivo</th><th>Estado</th></tr>
+        <tr><td>Fecha</td><td>Etapa</td><td>Acción</td><td>Resultado</td><td>Motivo</td><td>Estado</td></tr>
+        <tr><td>Fecha</td><td>Etapa</td><td>Acción</td><td>Resultado</td><td>Motivo</td><td>Estado</td></tr>
+        <tr><td>Fecha</td><td>Etapa</td><td>Acción</td><td>Resultado</td><td>Motivo</td><td>Estado</td></tr>
+        <tr><td>Fecha</td><td>Etapa</td><td>Acción</td><td>Resultado</td><td>Motivo</td><td>Estado</td></tr>
+        <tr><td>Fecha</td><td>Etapa</td><td>Acción</td><td>Resultado</td><td>Motivo</td><td>Estado</td></tr>
+    -->
+    </table>
+</div>
+
+</div>
+
+<div id="capaVentana">
+    <table border="0" cellpadding="0" cellspacing="0" width="450">
+        <tr>
+            <td style="background-image:url(top-left.gif);" width="4"><img src="pixel_trans.gif" /></td>
+            <td style="background-image:url(top-center.gif); background-repeat:repeat-x" width="418" align="left">
+                <font color="#FFFFFF" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;font-weight:600;">
+                    &nbsp;&nbsp;Título de la Ventana</font>
+            </td>
+            <td style="background-image:url(boton-cerrar.gif); cursor:pointer;" height="30" width="24"
+            onclick="cerrarVentana()"> <img src="pixel_trans.gif" height="25" width="22" alt="Cerrar Ventana" />
+            </td>
+            <td style="background-image:url(top-right.gif);" height="30" width="4"><img src="pixel_trans.gif" /></td>
+        </tr>
+        <tr>
+            <td style="background-image:url(medio-izq.gif); background-repeat:repeat-y;" width="4">
+                <img src="pixel_trans.gif" /></td>
+            <td colspan="2">
+                <table cellpadding="10" cellspacing="0" border="0" width="100%" style="background-color:#EFECDC">
+                <tr>
+                    <td style="text-align:center; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
+                        Esto es un simulacro de ventana emergente!!<br />							
+                        Observa que el fondo de la página está totalmente desactivado!!!<br />
+                        En todo este espacio de la ventana puedes colocar cualquier cosa!!<br />
+                        Esta ventanita fue hecha con tablas e imágenes.&nbsp;
+                        Esta ventanita fue hecha con tablas e imágenes.&nbsp;
+                        Esta ventanita fue hecha con tablas e imágenes.
+                        Esta ventanita fue hecha con tablas e imágenes.&nbsp;
+                        Esta ventanita fue hecha con tablas e imágenes.
+                        Esta ventanita fue hecha con tablas e imágenes.&nbsp;
+                        Esta ventanita fue hecha con tablas e imágenes.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <form name="formulario">
+                            <input type="button" name="bAceptar" value="Aceptar" onclick="cerrarVentana()"/>
+                        </form>
+                    </td>
+                </tr>
+                </table>
+            </td>
+            <td style="background-image:url(medio-der.gif); background-repeat:repeat-y;" width="4">
+                <img src="pixel_trans.gif" /></td>
+        </tr>
+        <tr>
+            <td style="background-image:url(botton-left.gif);" height="4"><img src="pixel_trans.gif" /></td>
+            <td style="background-image:url(botton-center.gif); background-repeat:repeat-x" height="4">
+                <img src="pixel_trans.gif" /></td>
+            <td style="background-image:url(botton-center.gif); background-repeat:repeat-x" height="4">
+                <img src="pixel_trans.gif" /></td>
+            <td style="background-image:url(botton-right.gif);" height="4" width="4"><img src="pixel_trans.gif" /></td>
+        </tr>		
+    </table>
+</div>
+
+<div id="capaFondo1">
+</div>
+<div id="capaFondo2">
+</div>
+<div id="capaFondo3">
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="../../public/js/jquery-1.10.2.js"></script>
+<script src="../../public/js/jquery-ui-1.10.4.custom.js"></script>
+<script language=javascript>
+    $( "#accordion" ).accordion();
+
+    $( "#button" ).button();
+    $( "#radioset" ).buttonset();
+
+    $( "#dialog" ).dialog({
+			autoOpen: false,
+			width: 400,
+			buttons: [
+				{
+					text: "Ok",
+					click: function() {
+						$( this ).dialog( "close" );
+					}
+				},
+				{
+					text: "Cancel",
+					click: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			]
+		});
+
+    $( "#dialog-link" ).click(function( event ) {
+            $( "#dialog" ).dialog( "open" );
+            event.preventDefault();
+    });
+
+    $( "#dialog-link, #icons li" ).hover(
+            function() {
+                    $( this ).addClass( "ui-state-hover" );
+            },
+            function() {
+                    $( this ).removeClass( "ui-state-hover" );
+            }
+    );
+
+    function ventanaSecundaria (URL){
+       window.open(URL,"ventana1","width=120,height=300,scrollbars=NO")
+    }
+
+function abrirVentana(ventana)
+{
+        if (ventana=="1")
+        {
+                document.getElementById("capaFondo1").style.visibility="visible";
+                document.getElementById("capaFondo2").style.visibility="hidden";
+                document.getElementById("capaFondo3").style.visibility="hidden";
+        }
+        else if (ventana=="2")
+        {
+                document.getElementById("capaFondo1").style.visibility="hidden";
+                document.getElementById("capaFondo2").style.visibility="visible";
+                document.getElementById("capaFondo3").style.visibility="hidden";
+        }
+        else
+        {
+                document.getElementById("capaFondo1").style.visibility="hidden";
+                document.getElementById("capaFondo2").style.visibility="hidden";
+                document.getElementById("capaFondo3").style.visibility="visible";
+        }
+        document.getElementById("capaVentana").style.visibility="visible";
+        document.formulario.bAceptar.focus();
+}
+
+function cerrarVentana()
+{
+        document.getElementById("capaFondo1").style.visibility="hidden";
+        document.getElementById("capaFondo2").style.visibility="hidden";
+        document.getElementById("capaFondo3").style.visibility="hidden";
+        document.getElementById("capaVentana").style.visibility="hidden";
+        document.formulario.bAceptar.blur();
+}
+</script> 
+
+{% endblock %}

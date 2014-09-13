@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>ProcesoMotivo list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Motivo</th>
+                <th>Comentario</th>
+                <th>Activo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('procesomotivo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.motivo }}</td>
+                <td>{{ entity.comentario }}</td>
+                <td>{{ entity.activo }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('procesomotivo_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

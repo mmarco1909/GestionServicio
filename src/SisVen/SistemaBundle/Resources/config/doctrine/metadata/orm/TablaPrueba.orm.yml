@@ -1,0 +1,33 @@
+TablaPrueba:
+    type: entity
+    table: tabla_prueba
+    id:
+        idtabla:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        datoString:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: dato_string
+        datoDate:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: dato_date
+        datoDouble:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: dato_double
+    lifecycleCallbacks: {  }

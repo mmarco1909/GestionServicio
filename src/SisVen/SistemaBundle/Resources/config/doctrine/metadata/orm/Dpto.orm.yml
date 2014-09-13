@@ -1,0 +1,29 @@
+Dpto:
+    type: entity
+    table: dpto
+    id:
+        idDpto:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_dpto
+            generator:
+                strategy: IDENTITY
+    fields:
+        codDpto:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_dpto
+        dpto:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Especifica si es Lima o Provincia'
+    lifecycleCallbacks: {  }

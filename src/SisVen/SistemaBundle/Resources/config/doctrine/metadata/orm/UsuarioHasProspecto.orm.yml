@@ -1,0 +1,43 @@
+UsuarioHasProspecto:
+    type: entity
+    table: usuario_has_prospecto
+    indexes:
+        fk_usuario_has_prospecto_prospecto1_idx:
+            columns:
+                - id_prospecto
+        fk_usuario_has_prospecto_usuario1_idx:
+            columns:
+                - id_usuario
+        fk_usuario_has_prospecto_producto1_idx:
+            columns:
+                - id_producto
+    id: {  }
+    oneToOne:
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idProspecto:
+            targetEntity: Prospecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_prospecto:
+                    referencedColumnName: id_prospecto
+            orphanRemoval: false
+        idProducto:
+            targetEntity: Producto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_producto:
+                    referencedColumnName: id_producto
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

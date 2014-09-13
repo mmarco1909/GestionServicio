@@ -1,0 +1,48 @@
+ProcesoInfo:
+    type: entity
+    table: proceso_info
+    indexes:
+        fk_proceso_info_proceso_resultado1_idx:
+            columns:
+                - id_proceso_resultado
+        fk_proceso_info_tipo_campo1_idx:
+            columns:
+                - id_tipo_campo
+    id:
+        idProcesoInfo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_proceso_info
+            generator:
+                strategy: IDENTITY
+    fields:
+        nombreCampo:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: nombre_campo
+    manyToOne:
+        idProcesoResultado:
+            targetEntity: ProcesoResultado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_resultado:
+                    referencedColumnName: id_proceso_resultado
+            orphanRemoval: false
+        idTipoCampo:
+            targetEntity: TipoCampo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_campo:
+                    referencedColumnName: id_tipo_campo
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

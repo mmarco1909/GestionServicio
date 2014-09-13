@@ -1,0 +1,84 @@
+MetaVentas:
+    type: entity
+    table: meta_ventas
+    indexes:
+        fk_meta_ventas_periodo1_idx:
+            columns:
+                - periodo
+        fk_meta_ventas_usuario1_idx:
+            columns:
+                - id_usuario
+        fk_meta_ventas_producto1_idx:
+            columns:
+                - id_producto
+        fk_meta_ventas_tipo_ffvv1:
+            columns:
+                - id_tipo_ffvv
+    id: {  }
+    fields:
+        metaPptoNro:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: meta_ppto_nro
+        metaPptoSoles:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: meta_ppto_soles
+        metaAjustNro:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: meta_ajust_nro
+        metaAjustSoles:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: meta_ajust_soles
+    oneToOne:
+        idTipoFfvv:
+            targetEntity: TipoFfvv
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_ffvv:
+                    referencedColumnName: id_tipo_ffvv
+            orphanRemoval: false
+        periodo:
+            targetEntity: Periodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo:
+                    referencedColumnName: periodo
+            orphanRemoval: false
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idProducto:
+            targetEntity: Producto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_producto:
+                    referencedColumnName: id_producto
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

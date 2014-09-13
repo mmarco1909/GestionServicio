@@ -1,0 +1,27 @@
+ProcesoEstado:
+    type: entity
+    table: proceso_estado
+    id:
+        idProcesoEstado:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_proceso_estado
+            generator:
+                strategy: IDENTITY
+    fields:
+        estado:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        descripcion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

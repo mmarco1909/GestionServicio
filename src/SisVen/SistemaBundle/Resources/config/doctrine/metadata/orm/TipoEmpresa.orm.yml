@@ -1,0 +1,43 @@
+TipoEmpresa:
+    type: entity
+    table: tipo_empresa
+    id:
+        idTipoEmpresa:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_tipo_empresa
+            generator:
+                strategy: IDENTITY
+    fields:
+        tipoEmpresa:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: tipo_empresa
+        ramCorte:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: ram_corte
+        nroInicial:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: nro_inicial
+        nroFinal:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: nro_final
+    lifecycleCallbacks: {  }

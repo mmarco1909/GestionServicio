@@ -1,0 +1,22 @@
+EstadoEmail:
+    type: entity
+    table: estado_email
+    id:
+        idEstadoEmail:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_estado_email
+            generator:
+                strategy: IDENTITY
+    fields:
+        estadoEmail:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            column: estado_email
+    lifecycleCallbacks: {  }

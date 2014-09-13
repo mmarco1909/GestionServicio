@@ -1,0 +1,22 @@
+TipoCampo:
+    type: entity
+    table: tipo_campo
+    id:
+        idTipoCampo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_tipo_campo
+            generator:
+                strategy: IDENTITY
+    fields:
+        tipoCampo:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: tipo_campo
+    lifecycleCallbacks: {  }

@@ -1,0 +1,55 @@
+Provincia:
+    type: entity
+    table: provincia
+    indexes:
+        fk_provincia_plaza1_idx:
+            columns:
+                - id_plaza
+        fk_provincia_departamento1_idx:
+            columns:
+                - id_departamento
+    id:
+        idProvincia:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            id: true
+            column: id_provincia
+            generator:
+                strategy: IDENTITY
+    fields:
+        codProvincia:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_provincia
+        provincia:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        idPlaza:
+            targetEntity: Plaza
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_plaza:
+                    referencedColumnName: id_plaza
+            orphanRemoval: false
+        idDepartamento:
+            targetEntity: Departamento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_departamento:
+                    referencedColumnName: id_departamento
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

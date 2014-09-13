@@ -1,0 +1,42 @@
+{# src/SisVen/SistemaBunle/Resources/views/Usuario/login.html.twig #}
+
+{% extends '::frontend.html.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block id 'usuario' %}
+
+{% block article %}
+    <br><br><br><br><br><br>
+    <div class ="wrapper">
+    <div class="container">
+        <div class="form_wrapper">
+        <section id="content">
+            <form action="{{ path('usuario_login_check') }}" method="post" class="active">
+                <h3>Sistema de Gestion de Servicio</h3>
+                <div>
+                    <label>Usuario:</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="Matricula" required=""  />
+                </div>
+                <div>
+                    <label>Contraseña:</label>
+                    <input type="password" id="password" name="_password" placeholder="Contraseña" required="" id="password" />
+                </div>
+                <div class="bottom">
+                    {% if error %}
+                        <div>
+                            <!--{{ error.message }}
+                            -->
+                            <h4 align = "center">Usuario o contraseña errado, intente nuevamente</h4>
+                        </div>
+                    {% endif %}
+                    <input type="submit" name="login" value="Ingresar" />
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </section><!-- content -->
+        </div>
+    </div><!-- container -->        
+    </div>
+{% endblock %}
+
+{% block aside %}{% endblock %}

@@ -1,0 +1,77 @@
+ProcesoResultado:
+    type: entity
+    table: proceso_resultado
+    indexes:
+        fk_proceso_resultado_proceso_estado1_idx:
+            columns:
+                - id_proceso_estado
+        fk_proceso_resultado_proceso_accion1_idx:
+            columns:
+                - id_proceso_accion
+        fk_proceso_resultado_proceso_etapa1_idx:
+            columns:
+                - id_proceso_etapa
+        fk_proceso_resultado_proceso_etapa2_idx:
+            columns:
+                - id_proceso_etapa_siguiente
+    id:
+        idProcesoResultado:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_proceso_resultado
+            generator:
+                strategy: IDENTITY
+    fields:
+        resultado:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        descripcion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        idProcesoEstado:
+            targetEntity: ProcesoEstado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_estado:
+                    referencedColumnName: id_proceso_estado
+            orphanRemoval: false
+        idProcesoAccion:
+            targetEntity: ProcesoAccion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_accion:
+                    referencedColumnName: id_proceso_accion
+            orphanRemoval: false
+        idProcesoEtapa:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+        idProcesoEtapaSiguiente:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa_siguiente:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

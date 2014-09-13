@@ -1,0 +1,37 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>ProcesoResultado list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Resultado</th>
+                <th>Descripcion</th>
+                <th>Activo</th>
+                <th>Input</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('procesoresultado_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.resultado }}</td>
+                <td>{{ entity.descripcion }}</td>
+                <td>{{ entity.activo }}</td>
+                <td>{{ entity.input }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('procesoresultado_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

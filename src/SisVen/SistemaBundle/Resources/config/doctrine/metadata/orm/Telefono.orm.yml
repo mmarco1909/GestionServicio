@@ -1,0 +1,70 @@
+Telefono:
+    type: entity
+    table: telefono
+    indexes:
+        fk_telefono_prospecto1_idx:
+            columns:
+                - id_prospecto
+        fk_telefono_estado_telefono1_idx:
+            columns:
+                - id_estado_telefono
+        fk_telefono_tipo_telefono1_idx:
+            columns:
+                - id_tipo_telefono
+    id:
+        idTelefono:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_telefono
+            generator:
+                strategy: IDENTITY
+    fields:
+        numero:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        anexo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechaAlta:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_alta
+    manyToOne:
+        idProspecto:
+            targetEntity: Prospecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_prospecto:
+                    referencedColumnName: id_prospecto
+            orphanRemoval: false
+        idEstadoTelefono:
+            targetEntity: EstadoTelefono
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_estado_telefono:
+                    referencedColumnName: id_estado_telefono
+            orphanRemoval: false
+        idTipoTelefono:
+            targetEntity: TipoTelefono
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_telefono:
+                    referencedColumnName: id_tipo_telefono
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

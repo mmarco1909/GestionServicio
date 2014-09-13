@@ -1,0 +1,155 @@
+Prospecto:
+    type: entity
+    table: prospecto
+    indexes:
+        fk_prospecto_afp1_idx:
+            columns:
+                - id_afp
+        fk_prospecto_empresa1_idx:
+            columns:
+                - id_empresa
+        fk_prospecto_sexo1_idx:
+            columns:
+                - id_sexo
+        fk_prospecto_tipo_documento1_idx:
+            columns:
+                - id_tipdoc
+        fk_prospecto_rango_ram1_idx:
+            columns:
+                - id_rango_ram
+        fk_prospecto_distrito1_idx:
+            columns:
+                - id_distrito
+    id:
+        idProspecto:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            id: true
+            column: id_prospecto
+            generator:
+                strategy: IDENTITY
+    fields:
+        cuspp:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+        primerNm:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: primer_nm
+        segundoNm:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: segundo_nm
+        primerAp:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: primer_ap
+        segundoAp:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: segundo_ap
+        fecNacimiento:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fec_nacimiento
+        numdoc:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        ram:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+    manyToOne:
+        idAfp:
+            targetEntity: Afp
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_afp:
+                    referencedColumnName: id_afp
+            orphanRemoval: false
+        idEmpresa:
+            targetEntity: Empresa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_empresa:
+                    referencedColumnName: id_empresa
+            orphanRemoval: false
+        idSexo:
+            targetEntity: Sexo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_sexo:
+                    referencedColumnName: id_sexo
+            orphanRemoval: false
+        idTipdoc:
+            targetEntity: TipoDocumento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipdoc:
+                    referencedColumnName: id_tipdoc
+            orphanRemoval: false
+        idRangoRam:
+            targetEntity: RangoRam
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_rango_ram:
+                    referencedColumnName: id_rango_ram
+            orphanRemoval: false
+        idDistrito:
+            targetEntity: Distrito
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_distrito:
+                    referencedColumnName: id_distrito
+            orphanRemoval: false
+    manyToMany:
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: idProspecto
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

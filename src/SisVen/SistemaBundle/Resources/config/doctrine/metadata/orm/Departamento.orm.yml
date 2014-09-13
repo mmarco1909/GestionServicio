@@ -1,0 +1,29 @@
+Departamento:
+    type: entity
+    table: departamento
+    id:
+        idDepartamento:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_departamento
+            generator:
+                strategy: IDENTITY
+    fields:
+        codDepartamento:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_departamento
+        departamento:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,48 @@
+MetaProceso:
+    type: entity
+    table: meta_proceso
+    indexes:
+        fk_meta_proceso_proceso_etapa1_idx:
+            columns:
+                - id_proceso_etapa
+    id:
+        idMetaProceso:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_meta_proceso
+            generator:
+                strategy: IDENTITY
+    fields:
+        tipoMedicion:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: 'En nro o en soles'
+            column: tipo_medicion
+        frecuencia:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: 'Día, semana, mes, año'
+        meta:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 0
+            comment: ''
+    manyToOne:
+        idProcesoEtapa:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

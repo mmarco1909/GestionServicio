@@ -1,0 +1,36 @@
+ProcesoEtapa:
+    type: entity
+    table: proceso_etapa
+    indexes:
+        fk_proceso_etapa_producto1_idx:
+            columns:
+                - id_producto
+    id:
+        idProcesoEtapa:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_proceso_etapa
+            generator:
+                strategy: IDENTITY
+    fields:
+        procesoEtapa:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Estas son las Etapas: Prospección, llamada, cita, cierre, fin'
+            column: proceso_etapa
+    manyToOne:
+        idProducto:
+            targetEntity: Producto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_producto:
+                    referencedColumnName: id_producto
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

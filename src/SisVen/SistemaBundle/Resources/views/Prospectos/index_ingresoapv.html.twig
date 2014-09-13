@@ -1,0 +1,478 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+Ingreso Produccion APV
+{% endblock %}
+
+{% block stylesheets %}  
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";  
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";  
+    @import "../../public/css/start/jquery-ui-1.10.4.custom.css";  
+
+    @import "../../public/css/jquery.timepicker.css"; 
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color:#333;
+    background: #CCCCCC;
+    z-index: 1;
+}
+
+h3 {
+    text-transform:capitalize;
+    font-family:Arial, Helvetica, sans-serif;
+}
+p {
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+    padding: 10px;
+}
+
+#wrapper {
+    width: 1000px;
+}
+
+#header {
+    float: left;
+    height: 75px;
+    width: 1000px;
+    color: #00008B;
+    background: #FFFFFF;
+}
+
+#content {
+    float: left;
+    color: #00008B;
+    background: #A9A9A9;
+    width: 500px;
+}
+
+#leftcolumn {
+    color: #00008B;
+    background: #A9A9A9;
+    width: 500px;
+    float: left;
+}
+
+#footer {
+    height: 40px;
+    width: 1000px;
+    background: #33FF66;
+    clear: both;
+}    
+   
+
+    .ui-front {
+        z-index:9999 !important; /* The default is 100. !important overrides the default. */
+    }
+
+    /*Modal Dialog*/
+    table {font-size: 1em;}
+    .demo-description {
+        clear: both;
+        padding: 12px;
+        font-size: 1.3em;
+        line-height: 1.4em;
+    }
+    .ui-draggable, .ui-droppable {
+        background-position: top;
+    } 
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }       
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+    .campo_oculto{visibility: hidden}
+    .campo_visible{visibility: visible}      
+
+    table.menu {
+        font-size:12px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #908d8d;
+        border-collapse: collapse;}
+    table.menu th {
+        font-size:12px;
+        background-color:#c0c0c0;
+        border-width: 1px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #908d8d;}
+    table.menu th.activo {
+        font-size:12px;
+        background-color:#f0f0f0;
+        border-width: 1px;
+        padding: 2px;
+        border-bottom: #f0f0f0;
+    }
+    table.menu tr {background-color:#f2efef;}
+    table.menu td {font-size:12px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+   
+</style>
+{% endblock %}
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+<hr class="linea" />
+<div style="width: 100%">
+    <div style="float: left; width: 20px">&nbsp</div>  
+    <div style="float: left">        
+        <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+        <div class="txt1">Ejecutivo: {{ app.user.nombre }} {{ app.user.primerAp }}</div>        
+    </div>
+    <div style="float: right; width: 50px">&nbsp</div>   
+    <div style="float: right">
+        <div class="txt1">                          
+            <form id="SelectProsp" name="SelectProsp" method="post">                                   
+                Producto:                                 
+                <select id="ProdSel" name="ProdSel">              
+                            {% render url('producto_listar', {'id_prod': producto}) %}
+                </select>                        
+            </form>                                
+            <a href="{{ path('usuario_logout') }}" class = "boton">Cerrar sesión</a>
+        </div>  
+    </div>       
+</div>
+
+<div style="clear: both"></div>
+<hr style="color: #0056b2;" />
+
+<div id="dialog-form" title="Agregar APV">
+    <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+    <form id="f_busca_prospecto">
+        <fieldset>
+            <table cellpadding="2px">
+                <tr>
+                    <td><label for="cuspp">Cuspp (*)</label></td>
+                    <td><input type="text" name="cuspp" id="cuspp" value="" maxlength="15" size="15"></td>
+                    <td><button id="btnBuscarCuspp" class="boton">Buscar</button></td>
+                </tr>                         
+                <tr><td>Primer Nombre</td><td><div id="div_primer_nm"></div><input type='text' name='primer_nm' id='primer_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Segundo Nombre</td><td><div id="div_segundo_nm"></div><input type='text' name='segundo_nm' id='segundo_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Apellido Paterno</td><td><div id="div_primer_ap"></div><input type='text' name='primer_ap' id='primer_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Apellido Materno</td><td><div id="div_segundo_ap"></div><input type='text' name='segundo_ap' id='segundo_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Monto (*)</td><td><div id="div_ram"></div><input type='text' name='ram' id='ram' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Tipo Aporte (*)</td><td><div id="div_aporte"></div>
+                        <select id="aporte" name="aporte">              
+                            <option selected>APVSFP</option>
+                            <option>APVCFP</option>                               
+                        </select> 
+                    </td><td></td>
+                </tr>
+                <tr><td>Fecha</td><td><div id="div_inpt_fecha"></div><input type='text' name='inpt_fecha' id='inpt_fecha' value='' maxlength='15' size='15'></td></tr>
+            </table>                        
+        </fieldset>
+    </form>
+    <table>
+        <tr><td colspan="2"><div id="div_mensaje"></div></td></tr>
+    </table> 
+</div>
+
+<table class="menu">
+    <tr>
+        <th><a href="{{ path("prospectos_index", {'id_prod': 'TRA'}) }}">Prospección</a></th>
+        <th><a href="{{ path("prospectos_icontactos", {'id_prod': 'TRA'}) }}">Contactos</a></th>
+        <th><a href="{{ path("prospectos_icitas", {'id_prod': 'TRA'}) }}">Citas</a></th>
+        <th><a href="{{ path("prospectos_icierres", {'id_prod': 'TRA'}) }}">Cierres</a></th>
+        <th><a href="{{ path("prospectos_inoexitosos", {'id_prod': 'TRA'}) }}">No Exitosos</a></th>
+        <th class="activo">Produccion APV</th>
+    </tr>
+</table>
+
+<div style="background: #f0f0f0">
+    <table width="100%">
+        <tr>
+            <td><div class="txt3">Mercado Potencial</div></td>
+            <td>
+                <table align="right" width="50%">
+                    <tr align="center">
+                        <td><div>Selección</div></td>
+                        <td><div>Avance</div></td>
+                        <td><div>Cumplimiento</div></td>                            
+                    </tr>
+                    <tr align="center">
+                        <td><div><div id="NroSeleccionados" style="font-size: 20px">0</div></div></td>
+                        <td><div><div id="AvanceProsp" style="font-size: 12px">&nbsp;</div> </div></td>
+                        <td><div><div id="CumpProsp" style="font-size: 20px">&nbsp;</div>  </div></td>                            
+                    </tr>
+                </table>
+            </td>
+        </tr>            
+    </table>
+    <table>
+        <tr>
+            <td>
+                <button id="create-user" class="boton">Agregar Nuevo Prospecto</button>
+            </td>
+        </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_apv">                    
+        <thead>
+            <tr>
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>Tipo aporte</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>                           
+                <th>CUSPP</th>
+                <th>Primer Nombre</th> 
+                <th>Segundo Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+                <th>Tipo aporte</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}   
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.timepicker.min.js"></script>
+
+<script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        
+        $('.boton').button();
+        /****************************************DatePicker*******************************/
+        $("#inpt_fecha").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        /*************************DataTables************************************************/
+        var calcDataTableHeight = function() {
+            return Math.floor($(window).height() * 60 / 100);
+        };
+
+        var url_prosp = '{{ path("produccionapv_listar", {'id_prod': 'v_prod'}) }}';
+        url_prosp = url_prosp.replace("v_prod", '{{producto}}');
+        var oTable = $('#p_apv').dataTable({
+            "sScrollY": calcDataTableHeight(),
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            "bJQueryUI": true,
+            "aoColumnDefs": [
+                {"sWidth": "10%", "aTargets": [-1]}
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": url_prosp
+
+        });        
+        
+        $(window).resize(function() {
+            var oSettings = oTable.fnSettings();
+            oSettings.oScroll.sY = calcDataTableHeight();
+            oTable.fnDraw();
+        });
+
+
+        /*************************************User Interaction*******************************/
+        
+        $("#create-user").click(function() {
+            $("#dialog-form").dialog("open");
+            $("#ram").hide();
+            $("#aporte").hide();
+            $("#primer_nm").hide();
+            $("#segundo_nm").hide();
+            $("#primer_ap").hide();
+            $("#segundo_ap").hide();
+            $("#inpt_fecha").hide();
+        });
+        
+        
+        $("#btnBuscarCuspp").click(function() {
+            var url_prosp = '{{ path("produccionapv_buscar", {'cuspp': 'v_cuspp'}) }}';
+            url_prosp = url_prosp.replace("v_cuspp", $('#cuspp').val());
+            $.ajax({
+                type: "POST",
+                url: url_prosp,
+                cache: true,
+                success: function(html) {
+                    var prospecto = jQuery.parseJSON(html);
+                    $("#div_primer_nm").html(prospecto.primer_nm);
+                    $("#div_segundo_nm").html(prospecto.segundo_nm);
+                    $("#div_primer_ap").html(prospecto.primer_ap);
+                    $("#div_segundo_ap").html(prospecto.segundo_ap);
+                    $("#primer_nm").val(prospecto.primer_nm);
+                    $("#segundo_nm").val(prospecto.segundo_nm);
+                    $("#primer_ap").val(prospecto.primer_ap);
+                    $("#segundo_ap").val(prospecto.segundo_ap);
+                    
+                    if (prospecto.encontrado == '1') {
+                        $("#primer_nm").hide();
+                        $("#segundo_nm").hide();
+                        $("#primer_ap").hide();
+                        $("#segundo_ap").hide();
+                        $("#ram").show();
+                        $("#aporte").show();
+                        $("#inpt_fecha").show();
+                        $("#div_mensaje").html('Prospecto Encontrado');
+                        return false;
+                    } else {
+                        $("#primer_nm").show();
+                        $("#segundo_nm").show();
+                        $("#primer_ap").show();
+                        $("#segundo_ap").show();
+                        $("#ram").show();
+                        $("#aporte").show();
+                        $("#inpt_fecha").show();
+                        $("#div_mensaje").html('Prospecto NO Encontrado. Por favor ingreses sus datos');
+                        return true;
+                    }
+
+                }
+            });
+            return false;
+        });
+        /********************************Modal Dialog***********************************/
+        var     cuspp = $("#cuspp"),
+                ram = $("#ram"),
+                aporte = $("#aporte"),
+                primer_nm = $("#primer_nm"),
+                segundo_nm = $("#segundo_nm"),
+                primer_ap = $("#primer_ap"),
+                segundo_ap = $("#segundo_ap"),
+                allFields = $([]).add(cuspp).add(ram).add(aporte),
+                tips = $(".validateTips"),
+                hideFields = $([]).add(ram).add(aporte)
+                .add(primer_nm).add(segundo_nm)
+                .add(primer_ap).add(segundo_ap);
+        
+        function updateTips(t) {
+            tips.text(t).addClass("ui-state-highlight");
+        }
+
+        function checkLength(o, n, min, max) {
+            if (o.val().length > max || o.val().length < min) {
+                o.addClass("ui-state-error");
+                updateTips("El campo " + n + " debe de tener mínimo " +
+                        min + " caracteres y máximo " + max + ".");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function checkRegexp(o, regexp, n) {
+            if (!(regexp.test(o.val()))) {
+                o.addClass("ui-state-error");
+                updateTips(n);
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function isEmpty(val) {
+            return (val === undefined || val == null || val.length <= 0) ? 'x$_x' : val;
+        }
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 480,
+            width: 440,
+            modal: true,
+            buttons: {
+                "Agregar APV": function() {
+                    var bValid = true;
+                    //PRIMERO LO BUSCA?? pendiente                            
+                    allFields.removeClass("ui-state-error");
+                    bValid = bValid && checkLength(cuspp, "Cuspp", 12, 15);
+                    bValid = bValid && checkLength(ram, "Ram", 1, 15);
+                    bValid = bValid && checkRegexp(cuspp, /^([0-9a-zA-Z])+$/, "El campo Cuspp sólo puede contener letras y números");
+                    bValid = bValid && checkRegexp(ram, /^([0-9])+$/, "El campo Monto sólo puede contener números");
+                    bValid = bValid && checkRegexp($("#inpt_fecha"), /^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-](19|20)\d{2}$/, "El campo Fecha Gestión debe no es correcto");
+                    if (bValid) {
+                        var url = '{{ path("produccionapv_agregar", 
+                            {'producto': 'v_prod',
+                            'cuspp': 'v_cuspp',
+                            'ram':'v_ram',
+                            'aporte':'v_aporte',
+                            'primer_nm':'v_primer_nm',
+                            'segundo_nm':'v_segundo_nm',
+                            'primer_ap':'v_primer_ap',
+                            'segundo_ap':'v_segundo_ap',
+                            'fecha':'v_fecha',
+                            'ruta': 'produccion_apv'}) }}';
+                        url = url.replace("v_prod", $('#ProdSel').val());
+                        url = url.replace("v_cuspp", cuspp.val());
+                        url = url.replace("v_ram", ram.val());
+                        url = url.replace("v_aporte", aporte.val());
+                        url = url.replace("v_primer_nm", $('#primer_nm').val());
+                        url = url.replace("v_segundo_nm", $('#segundo_nm').val());
+                        url = url.replace("v_primer_ap", $('#primer_ap').val());
+                        url = url.replace("v_segundo_ap", $('#segundo_ap').val());
+                        url = url.replace("v_fecha", $('#inpt_fecha').val());
+                        location.href = url;
+                        //$(this).dialog("close");
+                    }
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $("#div_ram").html('');
+                $("#div_aporte").html('');
+                $("#div_primer_nm").html('');
+                $("#div_segundo_nm").html('');
+                $("#div_primer_ap").html('');
+                $("#div_segundo_ap").html('');
+                $("#ram").show();
+                $("#aporte").show();
+                $("#primer_nm").show();
+                $("#segundo_nm").show();
+                $("#primer_ap").show();
+                $("#segundo_ap").show();
+                $("#div_mensaje").html('');
+                tips.text('').removeClass("ui-state-highlight");
+                allFields.val("").removeClass("ui-state-error");
+            }
+        });
+
+
+    });
+
+
+
+</script>
+
+
+{% endblock %}

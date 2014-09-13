@@ -1,0 +1,120 @@
+GestionMes:
+    type: entity
+    table: gestion_mes
+    indexes:
+        fk_usuario_has_prospecto1_prospecto2_idx:
+            columns:
+                - id_prospecto
+        fk_usuario_has_prospecto1_usuario2_idx:
+            columns:
+                - id_usuario
+        fk_usuario_has_prospecto1_producto1_idx:
+            columns:
+                - id_producto
+        fk_prospectos_seleccionados_periodo1_idx:
+            columns:
+                - periodo
+        fk_bitacora_cabecera_proceso_etapa1_idx:
+            columns:
+                - id_proceso_etapa
+        fk_gestion_mes_proceso_resultado1_idx:
+            columns:
+                - id_proceso_resultado
+        fk_gestion_mes_afp1_idx:
+            columns:
+                - id_afp
+    id: {  }
+    fields:
+        fechaHora:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_hora
+        fechaGestion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_gestion
+        fechaSiguiente:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_siguiente
+        motivo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        monto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+    oneToOne:
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idProspecto:
+            targetEntity: Prospecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_prospecto:
+                    referencedColumnName: id_prospecto
+            orphanRemoval: false
+        idProducto:
+            targetEntity: Producto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_producto:
+                    referencedColumnName: id_producto
+            orphanRemoval: false
+        periodo:
+            targetEntity: Periodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo:
+                    referencedColumnName: periodo
+            orphanRemoval: false
+    manyToOne:
+        idProcesoEtapa:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+        idProcesoResultado:
+            targetEntity: ProcesoResultado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_resultado:
+                    referencedColumnName: id_proceso_resultado
+            orphanRemoval: false
+        idAfp:
+            targetEntity: Afp
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_afp:
+                    referencedColumnName: id_afp
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

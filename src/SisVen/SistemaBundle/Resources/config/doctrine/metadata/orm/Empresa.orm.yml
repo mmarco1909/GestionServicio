@@ -1,0 +1,58 @@
+Empresa:
+    type: entity
+    table: empresa
+    indexes:
+        fk_empresa_tipo_empresa1_idx:
+            columns:
+                - id_tipo_empresa
+    id:
+        idEmpresa:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            id: true
+            column: id_empresa
+            generator:
+                strategy: IDENTITY
+    fields:
+        ruc:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+        razonSocial:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: razon_social
+    manyToOne:
+        idTipoEmpresa:
+            targetEntity: TipoEmpresa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_empresa:
+                    referencedColumnName: id_tipo_empresa
+            orphanRemoval: false
+    manyToMany:
+        idCart:
+            targetEntity: Cartera
+            cascade: {  }
+            mappedBy: idEmp
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+        idCartera:
+            targetEntity: Cartera
+            cascade: {  }
+            mappedBy: idEmpresa
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

@@ -1,0 +1,22 @@
+SeguimientoAccion:
+    type: entity
+    table: seguimiento_accion
+    id:
+        idSeguimientoAccion:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_seguimiento_accion
+            generator:
+                strategy: IDENTITY
+    fields:
+        seguimientoAccion:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: seguimiento_accion
+    lifecycleCallbacks: {  }

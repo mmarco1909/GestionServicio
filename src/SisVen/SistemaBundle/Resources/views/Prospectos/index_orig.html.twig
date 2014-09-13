@@ -1,0 +1,1158 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}  
+Listado de Usuarios
+{% endblock %}
+
+{% block stylesheets %}  
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";  
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";  
+
+    @import "../../public/css/jquery.fullcalendar.css"; 
+    @import "../../public/css/jquery.fullcalendar.print.css";     
+
+    @import "../../public/css/jquery.timepicker.css"; 
+
+    .ui-tabs .ui-tabs-panel { padding: 5px }  
+
+    .ui-front {
+        z-index:9999 !important; /* The default is 100. !important overrides the default. */
+    }
+
+    #calendar { margin:20px 0px 0px 0px;  }
+
+    .c_traspaso,
+    .c_traspaso div,
+    .c_traspaso span {
+        background-color: blue; /* background color */
+        border-color: blue;     /* border color */
+        color: white;           /* text color */
+
+    }
+
+    .c_apv,
+    .c_apv div,
+    .c_apv span {
+        background-color: red; /* background color */
+        border-color: red;     /* border color */
+        color: white;           /* text color */
+
+
+        /*Modal Dialog*/
+        table {font-size: 1em;}
+        .demo-description {
+            clear: both;
+            padding: 12px;
+            font-size: 1.3em;
+            line-height: 1.4em;
+        }
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }        
+        label, input { display:block; }
+        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; }
+        h1 { font-size: 1.2em; margin: .6em 0; }       
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+        .campo_oculto{visibility: hidden}
+        .campo_visible{visibility: visible}
+
+
+    </style>
+{% endblock %}
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+    <hr class="linea" />
+    <div style="width: 100%">
+            <div style="float: left; width: 20px">&nbsp</div>  
+            <div style="float: left">        
+                <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+                <div class="txt1">Ejecutivo: {{ app.user.nombre }} {{ app.user.primerAp }} {{ app.user.idRol }}
+                </div>        
+            </div>
+            <div style="float: right; width: 50px">&nbsp</div>   
+            <div style="float: right">
+                <div class="txt1">                          
+                    <form id="SelectProsp" name="SelectProsp" method="post">                                   
+                        Producto:                                 
+                        <select id="ProdSel" name="ProdSel">              
+                            {% render url('producto_listar', {'id_prod': producto}) %}
+                        </select>                        
+                    </form>                                
+                </div>  
+            </div>       
+        </div>
+
+        <div style="clear: both"></div>
+        <hr style="color: #0056b2;" />
+
+
+
+    <div id="dialog-form" title="Agregar Prospecto">
+        <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+        <form id="f_busca_prospecto">
+            <fieldset>
+                <table cellpadding="2px">
+                    <tr>
+                        <td><label for="cuspp">Cuspp (*)</label></td>
+                        <td><input type="text" name="cuspp" id="cuspp" value="" maxlength="15" size="15"></td>
+                        <td><button id="btnBuscarCuspp">Buscar</button></td>
+                    </tr>                         
+                    <tr><td>Ram (*)</td><td><div id="div_ram"></div><input type='text' name='ram' id='ram' value='' maxlength='15' size='15'></td><td></td></tr>
+                    <tr><td>Afp (*)</td><td><div id="div_afp"></div>
+                            <select id="afp" name="afp">              
+                            {% render url('afp_listar') %}
+                            </select> 
+                        </td><td></td></tr>
+                    <tr><td>Primer Nombre</td><td><div id="div_primer_nm"></div><input type='text' name='primer_nm' id='primer_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                    <tr><td>Segundo Nombre</td><td><div id="div_segundo_nm"></div><input type='text' name='segundo_nm' id='segundo_nm' value='' maxlength='15' size='15'></td><td></td></tr>
+                    <tr><td>Apellido Paterno</td><td><div id="div_primer_ap"></div><input type='text' name='primer_ap' id='primer_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                    <tr><td>Apellido Materno</td><td><div id="div_segundo_ap"></div><input type='text' name='segundo_ap' id='segundo_ap' value='' maxlength='15' size='15'></td><td></td></tr>
+                    <tr><td>Ruc</td><td><div id="div_ruc"></div><input type='text' name='ruc' id='ruc' value='' maxlength='15' size='15'></td><td></td></tr>
+
+                </table>                        
+            </fieldset>
+        </form>
+        <table>
+            <tr><td colspan="2"><div id="div_mensaje"></div></td></tr>
+        </table> 
+    </div>
+
+
+    <div id="dialog-form-accion" title="Registrar Acción">
+        <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+        <form id="f_registra_accion">
+            <fieldset>
+                <table cellpadding="2px">
+                    <tr>
+                        <td>CUSPP:</td>
+                        <td><div id="div_Acuspp"></div></tr>
+                    <tr>
+                        <td>Prospecto:</td>
+                        <td><div id="div_Anombrecompleto"></div></td>
+                    </tr>
+                    <tr><td>&nbsp</td><td>&nbsp</td></tr>                     
+                    <tr>
+                        <td>Acción</td>
+                        <td>
+                            <select id="AccionSel" name="AccionSel">              
+                                <option value='0'>Seleccione una Acción</option>
+                            </select> 
+                        </td>
+                    </tr>
+                    <tr><td><div id="div_inpt_gestfecha">Fecha Gestión</div></td><td><input type='text' name='inpt_gestfecha' id='inpt_gestfecha' value='' maxlength='15' size='15'></td></tr>
+                    <tr><td>&nbsp</td><td>&nbsp</td></tr>  
+                    <tr>
+                        <td><div id="div_AResultado">Resultado</div></td>
+                        <td>
+                            <select id="ResultSel" name="ResultSel">              
+                                <option value='0'>Seleccione una Acción</option>
+                            </select> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><div id="div_AMotivo">Motivo</div></td>
+                        <td>
+                            <select id="MotivoSel" name="MotivoSel">              
+                                <option value='0'>Seleccione un Resultado</option>
+                            </select> 
+                        </td>
+                    </tr>
+                    <tr><td><div id="div_inpt_fecha">Fecha</div></td><td><input type='text' name='inpt_fecha' id='inpt_fecha' value='' maxlength='15' size='15'></td></tr>
+                    <tr><td><div id="div_inpt_hora">Hora</div></td><td><input type='text' name='inpt_hora' id='inpt_hora' value='' maxlength='15' size='15'></td></tr>
+                    <tr><td><div id="div_inpt_lugar">Lugar</div></td><td><input type='text' name='inpt_lugar' id='inpt_lugar' value='' maxlength='30' size='30'></td></tr>
+                    <tr><td><div id="div_inpt_afp">Afp</div></td><td>
+                            <select id="inpt_afp" name="inpt_afp">              
+                            {% render url('afp_listar') %}
+                            </select> 
+                        </td></tr>
+                    <tr><td><div id="div_inpt_ram">Ram</div></td><td><input type='text' name='inpt_ram' id='inpt_ram' value='' maxlength='15' size='15'></td></tr>
+                    <tr><td></td><td>
+                            <input type='text' name='campos_val' id='campos_val' value=''>
+                            <input type='text' name='inpt_cuspp' id='inpt_cuspp' value=''>
+                            <input type='text' name='inpt_etapa' id='inpt_etapa' value=''>
+                        </td></tr>
+                </table>                        
+            </fieldset>
+        </form>
+        <table>
+            <tr><td colspan="2"><div id="div_Amensaje"></div></td></tr>
+        </table> 
+    </div>
+
+
+    <div id="container">  
+        <div id="demo">
+            <div id="tabs">
+                <ul>
+                    <li><a href="#prospeccion">Prospección</a></li>
+                    <li><a href="#contactabilidad">Contactabilidad</a></li>
+                    <li><a href="#citas">Citas</a></li>
+                    <li><a href="#cierres">Cierres</a></li>
+                    <li><a href="#no_exitosos">No Exitosos</a></li>                
+                </ul>
+                <div id="prospeccion">
+                    <div style="float: left; width: 100%;">
+                        <div style="float: left; width: 400px; height: 55px;">
+                            <div style="float: left; width: 100%; height: 34px;">
+                                <h1>Mercado Potencial</h1>
+                            </div>
+                            <div style="float: left; height: 20px">
+                                    <button id="btnGrabar">Grabar Prospectos Seleccionados</button>
+                                    <button id="create-user">Agregar Nuevo Prospecto</button>                                     
+                                </div>   
+                            </div>
+                            <div style="float: right;">
+                            <div style="height: 32px">&nbsp;</div>
+                            </div>
+                            <div style="float: right; text-align: center; width: 350px;">
+                            <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Selección</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="NroSeleccionados" style="font-size: 20px">0</div>                                  
+                                    </div>
+                                </div>      
+                                <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Avance</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="AvanceProsp" style="font-size: 12px">&nbsp;</div>                                  
+                                    </div>
+                                </div>
+                                <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Cumplimiento</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="CumpProsp" style="font-size: 20px">&nbsp;</div>                                  
+                                    </div>
+                                </div>    
+                            </div>                    
+                        </div>
+                        <br>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_potencial">                    
+                            <thead>
+                                <tr>
+                                    <th>CUSPP</th>
+                                    <th>Primer Nombre</th> 
+                                    <th>Segundo Nombre</th>
+                                    <th>Primer Apellido</th>
+                                    <th>Segundo Apellido</th>
+                                    <th>MUR</th>
+                                    <th>AFP</th>
+                                    <th>RUC</th>
+                                    <th>Empresa</th>  
+                                    <th>Acciones</th>  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>                           
+                                    <th>CUSPP</th>
+                                    <th>Primer Nombre</th> 
+                                    <th>Segundo Nombre</th>
+                                    <th>Primer Apellido</th>
+                                    <th>Segundo Apellido</th>
+                                    <th>MUR</th>
+                                    <th>AFP</th>
+                                    <th>RUC</th>
+                                    <th>Empresa</th> 
+                                    <th>Acciones</th>  
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>                
+                    <div id="contactabilidad">
+                        <div style="float: left; width: 100%;">
+                        <div style="float: left; width: 400px; height: 55px;">
+                            <div style="float: left; width: 100%; height: 34px;">
+                                <h1>Contactabilidad</h1>
+                            </div>
+                            <div style="float: left; height: 20px"></div>   
+                            </div>
+                            <div style="float: right;">
+                            <div style="height: 32px">&nbsp;</div>
+                            </div>
+                            <div style="float: right; text-align: center; width: 350px;">
+                            <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Selección</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="NroSeleccionados" style="font-size: 20px">0</div>                                  
+                                    </div>
+                                </div>      
+                                <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Avance</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="AvanceProsp" style="font-size: 12px">&nbsp;</div>                                  
+                                    </div>
+                                </div>
+                                <div style="float: left; width: 100px; text-align: center">
+                                    <div style="height: 24px">Cumplimiento</div>
+                                    <div style="text-align: center; height: 30px">
+                                        <div id="CumpProsp" style="font-size: 20px">&nbsp;</div>                                  
+                                    </div>
+                                </div>    
+                            </div>                    
+                        </div>
+                        <br>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_contacto">                    
+                            <thead>
+                                <tr>
+                                    <th>CUSPP</th>
+                                    <th>Primer Nombre</th> 
+                                    <th>Segundo Nombre</th>
+                                    <th>Primer Apellido</th>
+                                    <th>Segundo Apellido</th>
+                                    <th>MUR</th>
+                                    <th>AFP</th>
+                                    <th>RUC</th>
+                                    <th>Empresa</th>  
+                                    <th>Acciones</th>  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>                           
+                                    <th>CUSPP</th>
+                                    <th>Primer Nombre</th> 
+                                    <th>Segundo Nombre</th>
+                                    <th>Primer Apellido</th>
+                                    <th>Segundo Apellido</th>
+                                    <th>MUR</th>
+                                    <th>AFP</th>
+                                    <th>RUC</th>
+                                    <th>Empresa</th>  
+                                    <th>Acciones</th>  
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div id="citas">                        
+                        <div id="tabs2">
+                            <ul>
+                                <li><a href="#citas_calendario">Vista Calendario</a></li>
+                                <li><a href="#citas_listado">Vista Listado</a></li>                       
+                            </ul>
+                            <div id="citas_calendario">
+                                <div id="loading" style='display:none'>loading...</div>
+                                <div id="calendar"></div>
+                            </div>
+                            <div id="citas_listado">
+                                <div style="float: left; width: 100%;">
+                                <div style="float: left; width: 400px; height: 55px;">
+                                    <div style="float: left; width: 100%; height: 34px;">
+                                        <h1>Citas Listado</h1>
+                                    </div>                                    
+                                </div>
+                                <div style="float: right;">
+                                    <div style="height: 32px">&nbsp;</div>
+                                    </div>
+                                    <div style="float: right; text-align: center; width: 350px;">
+                                    <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Selección</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="NroSeleccionados" style="font-size: 20px">0</div>                                  
+                                            </div>
+                                        </div>      
+                                        <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Avance</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="AvanceProsp" style="font-size: 12px">&nbsp;</div>                                  
+                                            </div>
+                                        </div>
+                                        <div style="float: left; width: 100px; text-align: center">
+                                            <div style="height: 24px">Cumplimiento</div>
+                                            <div style="text-align: center; height: 30px">
+                                                <div id="CumpProsp" style="font-size: 20px">&nbsp;</div>                                  
+                                            </div>
+                                        </div>    
+                                    </div>                    
+                                </div>
+                                <br>
+                                <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_citas_listado">                    
+                                    <thead>
+                                        <tr>
+                                            <th>CUSPP</th>
+                                            <th>Primer Nombre</th> 
+                                            <th>Segundo Nombre</th>
+                                            <th>Primer Apellido</th>
+                                            <th>Segundo Apellido</th>
+                                            <th>MUR</th>
+                                            <th>AFP</th>
+                                            <th>RUC</th>
+                                            <th>Empresa</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>                           
+                                            <th>CUSPP</th>
+                                            <th>Primer Nombre</th> 
+                                            <th>Segundo Nombre</th>
+                                            <th>Primer Apellido</th>
+                                            <th>Segundo Apellido</th>
+                                            <th>MUR</th>
+                                            <th>AFP</th>
+                                            <th>RUC</th>
+                                            <th>Empresa</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>   
+                    </div>
+                    <div id="cierres">
+                        <div style="float: left; width: 100%;">
+                        <div style="float: left; width: 400px; height: 55px;">
+                            <div style="float: left; width: 100%; height: 34px;">
+                                <h1>Cierres</h1>
+                            </div>                            
+                        </div>
+
+                    </div>
+                    <br>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_cierres">                    
+                        <thead>
+                            <tr>
+                                <th>CUSPP</th>
+                                <th>Primer Nombre</th> 
+                                <th>Segundo Nombre</th>
+                                <th>Primer Apellido</th>
+                                <th>Segundo Apellido</th>
+                                <th>MUR</th>
+                                <th>AFP</th>
+                                <th>RUC</th>
+                                <th>Empresa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>                           
+                                <th>CUSPP</th>
+                                <th>Primer Nombre</th> 
+                                <th>Segundo Nombre</th>
+                                <th>Primer Apellido</th>
+                                <th>Segundo Apellido</th>
+                                <th>MUR</th>
+                                <th>AFP</th>
+                                <th>RUC</th>
+                                <th>Empresa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div id="no_exitosos">
+                    <div style="float: left; width: 100%;">
+                        <div style="float: left; width: 400px; height: 55px;">
+                            <div style="float: left; width: 100%; height: 34px;">
+                                <h1>No Existosos</h1>
+                            </div>                            
+                        </div>
+
+                    </div>
+                    <br>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_no_exitoso">                    
+                        <thead>
+                            <tr>
+                                <th>CUSPP</th>
+                                <th>Primer Nombre</th> 
+                                <th>Segundo Nombre</th>
+                                <th>Primer Apellido</th>
+                                <th>Segundo Apellido</th>
+                                <th>MUR</th>
+                                <th>AFP</th>
+                                <th>RUC</th>
+                                <th>Empresa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>                           
+                                <th>CUSPP</th>
+                                <th>Primer Nombre</th> 
+                                <th>Segundo Nombre</th>
+                                <th>Primer Apellido</th>
+                                <th>Segundo Apellido</th>
+                                <th>MUR</th>
+                                <th>AFP</th>
+                                <th>RUC</th>
+                                <th>Empresa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}   
+    <script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" language="javascript" src="../../public/js/jquery-ui-tabs.js"></script>
+    <script type="text/javascript" language="javascript" src='../../public/js/jquery.fullcalendar.min.js'></script>
+    <script type="text/javascript" language="javascript" src="../../public/js/jquery.timepicker.min.js"></script>
+
+    <script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+    <script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+
+
+    <script type="text/javascript" charset="utf-8">
+        var cumplimiento = jQuery.parseJSON('{{ render(controller('SistemaBundle:Prospectos:avance')) }}');
+        document.getElementById('AvanceProsp').innerHTML = cumplimiento.avance + ' de ' + cumplimiento.meta;
+        document.getElementById('CumpProsp').innerHTML = cumplimiento.cumplimiento + '%';
+
+        function registra_accion(cuspp, nombre, etapa) {
+            $("#dialog-form-accion").dialog("open");
+            $("#campos_val").hide();
+            $('#AccionSel').html('<option value="">Cargando...</option>');
+            $("#div_Acuspp").html(cuspp);
+            $("#div_Anombrecompleto").html(nombre);
+            $("#div_inpt_fecha").hide();
+            $("#inpt_fecha").hide();
+            $("#div_inpt_hora").hide();
+            $("#inpt_hora").hide();
+            $("#div_inpt_lugar").hide();
+            $("#inpt_lugar").hide();
+            $("#div_inpt_afp").hide();
+            $("#inpt_afp").hide();
+            $("#div_inpt_ram").hide();
+            $("#inpt_ram").hide();
+            $("#div_AResultado").hide();
+            $("#ResultSel").hide();
+            $("#div_AMotivo").hide();
+            $("#MotivoSel").hide();
+            $("#inpt_cuspp").hide();
+            $("#inpt_etapa").hide();
+            $("#inpt_cuspp").val(cuspp);
+            $("#inpt_etapa").val(etapa);
+            var url_accion = '{{ path("proc_accion_listar", {'etapa': 'v_etapa'}) }}';
+            url_accion = url_accion.replace("v_etapa", etapa);
+            $.ajax({
+                url: url_accion,
+                success: function(resp) {
+                    $('#AccionSel').html(resp)
+                }
+            });
+
+        }
+
+        $(document).ready(function() {
+            /****************************************DatePicker*******************************/
+            $("#inpt_gestfecha").datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#inpt_fecha").datepicker({
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true
+            });
+            /****************************************TimePicker*******************************/
+            $('#inpt_hora').timepicker({
+                'scrollDefaultNow': true
+            });
+
+
+            /****************************************Calendar*******************************/
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+            $('#calendar').fullCalendar({
+                theme: true,
+                height: 450,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                timeFormat: {
+                    agenda: 'h:mm{ - h:mm}',
+                    '': 'h(:mm)t'
+                },
+                monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                buttonText: {
+                    today: 'hoy',
+                    month: 'mes',
+                    week: 'semana',
+                    day: 'día'
+                },
+                editable: false,
+                events: {{ render(controller('SistemaBundle:Prospectos:agenda')) }},
+                loading: function(bool) {
+                    if (bool)
+                        $('#loading').show();
+                    else
+                        $('#loading').hide();
+                }
+            });
+            /************************************************Tabs***************************************/
+            $("#tabs").tabs({
+                "show": function(event, ui) {
+                    var table = $.fn.dataTable.fnTables(true);
+                    if (table.length > 0) {
+                        $(table).dataTable().fnAdjustColumnSizing();
+                    }
+                }
+            });
+            $("#tabs2").tabs({
+                "show": function(event, ui) {
+                    var table = $.fn.dataTable.fnTables(true);
+                    if (table.length > 0) {
+                        $(table).dataTable().fnAdjustColumnSizing();
+                    }
+                }
+            });
+            /*************************DataTables************************************************/
+            var calcDataTableHeight = function() {
+                return Math.floor($(window).height() * 60 / 100);
+            };
+            var aSelected = [];
+            var url_prosp = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '0','id_estado': '1'}) }}';
+            url_prosp = url_prosp.replace("v_prod", '{{producto}}');
+            var oTable = $('#p_potencial').dataTable({
+                "sScrollY": calcDataTableHeight(),
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                "bJQueryUI": true,
+                "aoColumnDefs": [
+                    {"sWidth": "10%", "aTargets": [-1]}
+                ],
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": url_prosp,
+                "fnRowCallback"
+                        : function(nRow, aData, iDisplayIndex) {
+                            if (jQuery.inArray(aData.DT_RowId, aSelected) !== -1) {
+                                $(nRow).addClass('row_selected');
+                            }
+                        }
+            });
+            var url_contact = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '1','id_estado': '1'}) }}';
+            url_contact = url_contact.replace("v_prod", '{{producto}}');
+            var oTable = $('#p_contacto').dataTable({
+                "sScrollY": calcDataTableHeight(),
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                "bJQueryUI": true,
+                "aoColumnDefs": [
+                    {"aTargets": [9], // Column to target
+                        "mRender": function(data, type, full) {
+                            var nombre = '';
+                            if (full[1] !== null && full[1] !== "NULL") {
+                                nombre = full[1];
+                            }
+                            if (full[2] !== null && full[2] !== "NULL") {
+                                nombre = nombre + ' ' + full[2];
+                            }
+                            if (full[3] !== null && full[3] !== "NULL") {
+                                nombre = nombre + ' ' + full[3];
+                            }
+                            if (full[4] !== null && full[4] !== "NULL") {
+                                nombre = nombre + ' ' + full[4];
+                            }
+                            return "<a href='javascript:registra_accion(" + '"' + full[0] + '"' + "," + '"' + nombre + '"' + ",1);'><IMG src='../../public/images/icn_gestion.png' alt='Ingresar Gestión' title='Ingresar Gestión'></a>&nbsp;" + data;
+                        }
+                    }],
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": url_contact
+            });
+
+            var url_citas_listado = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '3','id_estado': '3'}) }}';
+            url_citas_listado = url_citas_listado.replace("v_prod", '{{producto}}');
+            var oTable = $('#p_citas_listado').dataTable({
+                "sScrollY": calcDataTableHeight(),
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                "bJQueryUI": true,
+                "aoColumnDefs": [
+                    {"sWidth": "10%", "aTargets": [-1]}
+                ],
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": url_citas_listado
+            });
+
+            var url_cierres = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '4','id_estado': '4'}) }}';
+            url_cierres = url_cierres.replace("v_prod", '{{producto}}');
+            var oTable = $('#p_cierres').dataTable({
+                "sScrollY": calcDataTableHeight(),
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                "bJQueryUI": true,
+                "aoColumnDefs": [
+                    {"sWidth": "10%", "aTargets": [-1]}
+                ],
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": url_cierres
+            });
+
+            var url_no_exitoso = '{{ path("prospectos_listar", {'id_prod': 'v_prod','id_etapa': '5','id_estado': '5'}) }}';
+            url_no_exitoso = url_no_exitoso.replace("v_prod", '{{producto}}');
+            var oTable = $('#p_no_exitoso').dataTable({
+                "sScrollY": calcDataTableHeight(),
+                "bScrollCollapse": true,
+                "bPaginate": false,
+                "bJQueryUI": true,
+                "aoColumnDefs": [
+                    {"sWidth": "10%", "aTargets": [-1]}
+                ],
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": url_no_exitoso
+            });
+
+            $('#p_potencial tbody tr').live('click', function() {
+                var id = this.id;
+                var index = jQuery.inArray(id, aSelected);
+                if (index === -1) {
+                    aSelected.push(id);
+                    document.getElementById('NroSeleccionados').innerHTML = aSelected.length;
+                } else {
+                    aSelected.splice(index, 1);
+                    document.getElementById('NroSeleccionados').innerHTML = aSelected.length;
+                }
+                $(this).toggleClass('row_selected');
+            });
+            $(window).resize(function() {
+                var oSettings = oTable.fnSettings();
+                oSettings.oScroll.sY = calcDataTableHeight();
+                oTable.fnDraw();
+            });
+
+
+            /*************************************User Interaction*******************************/
+            $('#AccionSel').on('change', function() {
+                $("#AccionSel").removeClass("ui-state-error");
+                $("#div_AMotivo").hide();
+                $("#MotivoSel").hide();
+                $("#div_inpt_fecha").hide();
+                $("#inpt_fecha").hide();
+                $("#div_inpt_hora").hide();
+                $("#inpt_hora").hide();
+                $("#div_inpt_lugar").hide();
+                $("#inpt_lugar").hide();
+                $("#div_inpt_afp").hide();
+                $("#inpt_afp").hide();
+                $("#div_inpt_ram").hide();
+                $("#inpt_ram").hide();
+                if ($('#AccionSel').val() !== '0') {
+                    $("#div_AResultado").show();
+                    $("#ResultSel").show();
+                } else {
+                    $("#div_AResultado").hide();
+                    $("#ResultSel").hide();
+                    $("#div_AMotivo").hide();
+                    $("#MotivoSel").hide();
+                }
+                $('#ResultSel').html('<option value="">Cargando...</option>');
+                var url_result = '{{ path("proc_resultado_listar", {'accion': 'v_accion'}) }}';
+                url_result = url_result.replace("v_accion", $('#AccionSel').val());
+                $.ajax({
+                    url: url_result,
+                    success: function(resp) {
+                        $('#ResultSel').html(resp)
+                    }
+                });
+            });
+
+            $('#ResultSel').on('change', function() {
+                $("#ResultSel").removeClass("ui-state-error");
+                $("#div_inpt_fecha").hide();
+                $("#inpt_fecha").hide();
+                $("#div_inpt_hora").hide();
+                $("#inpt_hora").hide();
+                $("#div_inpt_lugar").hide();
+                $("#inpt_lugar").hide();
+                $("#div_inpt_afp").hide();
+                $("#inpt_afp").hide();
+                $("#div_inpt_ram").hide();
+                $("#inpt_ram").hide();
+                $("#div_AMotivo").hide();
+                $("#MotivoSel").hide();
+                if ($('#ResultSel').val() !== '0') {
+                    $('#MotivoSel').html('<option value="">Cargando...</option>');
+                    var url_motivo = '{{ path("proc_motivo_listar", {'resultado': 'v_resultado'}) }}';
+                    url_motivo = url_motivo.replace("v_resultado", $('#ResultSel').val());
+                    $.ajax({
+                        url: url_motivo,
+                        success: function(resp) {
+                            if (resp === "<option value='0'>Seleccione una Opción</option>") {
+                                $("#div_AMotivo").hide();
+                                $("#MotivoSel").hide();
+                            } else {
+                                $("#div_AMotivo").show();
+                                $("#MotivoSel").show();
+                                $('#MotivoSel').html(resp)
+                            }
+                        }
+                    });
+                } else {
+                    $("#div_AMotivo").hide();
+                    $("#MotivoSel").hide();
+                }
+                var url_inputs = '{{ path("proc_resultado_inputs", {'resultado': 'v_resultado'}) }}';
+                url_inputs = url_inputs.replace("v_resultado", $('#ResultSel').val());
+                //alert(url_inputs);
+                $.ajax({
+                    url: url_inputs,
+                    success: function(resp) {
+                        //alert(resp);
+                        var inputs = $.parseJSON(resp);
+                        $("#campos_val").val(resp);
+                        $.each(inputs, function() {
+                            $("#" + this['campo']).show();
+                            $("#div_" + this['campo']).show();
+                        });
+                    }
+                });
+            });
+
+            $('#MotivoSel').on('change', function() {
+                $("#MotivoSel").removeClass("ui-state-error");
+            });
+
+            $('#ProdSel').on('change', function() {
+                var url = '{{ path('prospectos_index', {'id_prod': 'v_prod'}) }}';
+                url = url.replace("v_prod", $('#ProdSel').val());
+                location.href = url;
+            });
+            $("#btnGrabar").click(function() {
+                var url = '{{ path("prospectos_grabar_seleccion", {'producto': 'v_prod', 'ids_prospectos': 'v_pros'}) }}';
+                url = url.replace("v_pros", aSelected);
+                url = url.replace("v_prod", $('#ProdSel').val());
+                location.href = url;
+            });
+            $("#create-user").click(function() {
+                //alert('aqui');
+                //alert(new Date(y, m, d, 10, 30));
+
+                $("#dialog-form").dialog("open");
+                $("#ram").hide();
+                $("#afp").hide();
+                $("#primer_nm").hide();
+                $("#segundo_nm").hide();
+                $("#primer_ap").hide();
+                $("#segundo_ap").hide();
+                $("#ruc").hide();
+            });
+            $("#btnBuscarCuspp").click(function() {
+                //alert($('#form_task').val());  
+                var url_prosp = '{{ path("prospectos_buscar", {'producto': 'v_producto', 'cuspp': 'v_cuspp'}) }}';
+                url_prosp = url_prosp.replace("v_cuspp", $('#cuspp').val());
+                url_prosp = url_prosp.replace("v_producto", '{{producto}}');
+                $.ajax({
+                    type: "POST",
+                    url: url_prosp,
+                    cache: true,
+                    success: function(html) {
+                        var prospecto = jQuery.parseJSON(html);
+                        $("#div_ram").html(prospecto.ram);
+                        $("#div_afp").html(prospecto.afp);
+                        $("#div_primer_nm").html(prospecto.primer_nm);
+                        $("#div_segundo_nm").html(prospecto.segundo_nm);
+                        $("#div_primer_ap").html(prospecto.primer_ap);
+                        $("#div_segundo_ap").html(prospecto.segundo_ap);
+                        $("#div_ruc").html(prospecto.ruc);
+                        $("#ram").val(prospecto.ram);
+                        $("#afp").val(prospecto.afp);
+                        $("#primer_nm").val(prospecto.primer_nm);
+                        $("#segundo_nm").val(prospecto.segundo_nm);
+                        $("#primer_ap").val(prospecto.primer_ap);
+                        $("#segundo_ap").val(prospecto.segundo_ap);
+                        $("#ruc").val(prospecto.ruc);
+                        if (prospecto.encontrado == '1') {
+                            $("#ram").hide();
+                            $("#afp").hide();
+                            $("#primer_nm").hide();
+                            $("#segundo_nm").hide();
+                            $("#primer_ap").hide();
+                            $("#segundo_ap").hide();
+                            $("#ruc").hide();
+                            $("#div_mensaje").html('Prospecto Encontrado');
+                            return false;
+                        } else {
+                            $("#ram").show();
+                            $("#afp").show();
+                            $("#primer_nm").show();
+                            $("#segundo_nm").show();
+                            $("#primer_ap").show();
+                            $("#segundo_ap").show();
+                            $("#ruc").show();
+                            $("#div_mensaje").html('Prospecto NO Encontrado. Por favor ingreses sus datos');
+                            return true;
+                        }
+
+                    }
+                });
+                return false;
+            });
+            $("#contact-action").click(function() {
+                //alert('aqui');
+            });
+            /********************************Modal Dialog***********************************/
+            var cuspp = $("#cuspp"),
+                    ram = $("#ram"),
+                    afp = $("#afp"),
+                    allFields = $([]).add(cuspp).add(ram).add(afp),
+                    tips = $(".validateTips"),
+                    hideFields = $([]).add(ram).add(afp)
+                    .add(primer_nm).add(segundo_nm)
+                    .add(primer_ap).add(segundo_ap).add(ruc);
+            function updateTips(t) {
+                tips.text(t).addClass("ui-state-highlight");
+                /*setTimeout(function() {
+                 tips.removeClass("ui-state-highlight", 1500);
+                 }, 500);*/
+            }
+
+            function checkLength(o, n, min, max) {
+                if (o.val().length > max || o.val().length < min) {
+                    o.addClass("ui-state-error");
+                    updateTips("El campo " + n + " debe de tener mínimo " +
+                            min + " caracteres y máximo " + max + ".");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            function checkRegexp(o, regexp, n) {
+                if (!(regexp.test(o.val()))) {
+                    o.addClass("ui-state-error");
+                    updateTips(n);
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            function isEmpty(val) {
+                return (val === undefined || val == null || val.length <= 0) ? 'x$_x' : val;
+            }
+
+            $("#dialog-form").dialog({
+                autoOpen: false,
+                height: 380,
+                width: 440,
+                modal: true,
+                buttons: {
+                    "Agregar Prospecto": function() {
+                        var bValid = true;
+                        //PRIMERO LO BUSCA?? pendiente                            
+                        allFields.removeClass("ui-state-error");
+                        bValid = bValid && checkLength(cuspp, "Cuspp", 12, 15);
+                        bValid = bValid && checkLength(ram, "Ram", 1, 15);
+                        bValid = bValid && checkLength(afp, "Afp", 2, 15);
+                        bValid = bValid && checkRegexp(cuspp, /^([0-9a-zA-Z])+$/, "El campo Cuspp sólo puede contener letras y números");
+                        bValid = bValid && checkRegexp(ram, /^([1-9])+$/, "El campo Ram sólo puede contener números");
+                        bValid = bValid && checkRegexp(afp, /^([0-9a-zA-Z])+$/, "Afp field only allow : a-z 0-9");
+                        if (bValid) {
+                            //alert($('#ProdSel').val() + cuspp.val() + ram.val() + afp.val());
+                            var url = '{{ path("prospectos_agregar", {'producto': 'v_prod', 'cuspp': 'v_cuspp', 'ram':'v_ram', 'afp':'v_afp', 'primer_nm':'v_primer_nm', 'segundo_nm':'v_segundo_nm', 'primer_ap':'v_primer_ap', 'segundo_ap':'v_segundo_ap', 'ruc':'v_ruc'}) }}';
+                            url = url.replace("v_prod", $('#ProdSel').val());
+                            url = url.replace("v_cuspp", cuspp.val());
+                            url = url.replace("v_ram", ram.val());
+                            url = url.replace("v_afp", afp.val());
+                            url = url.replace("v_primer_nm", $('#primer_nm').val());
+                            url = url.replace("v_segundo_nm", $('#segundo_nm').val());
+                            url = url.replace("v_primer_ap", $('#primer_ap').val());
+                            url = url.replace("v_segundo_ap", $('#segundo_ap').val());
+                            url = url.replace("v_ruc", $('#ruc').val());
+                            location.href = url;
+                            //$(this).dialog("close");
+                        }
+                    },
+                    Cancelar: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function() {
+                    $("#div_ram").html('');
+                    $("#div_afp").html('');
+                    $("#div_primer_nm").html('');
+                    $("#div_segundo_nm").html('');
+                    $("#div_primer_ap").html('');
+                    $("#div_segundo_ap").html('');
+                    $("#div_ruc").html('');
+                    $("#ram").show();
+                    $("#afp").show();
+                    $("#primer_nm").show();
+                    $("#segundo_nm").show();
+                    $("#primer_ap").show();
+                    $("#segundo_ap").show();
+                    $("#ruc").show();
+                    $("#div_mensaje").html('');
+                    tips.text('').removeClass("ui-state-highlight");
+                    allFields.val("").removeClass("ui-state-error");
+                }
+            });
+
+            $("#dialog-form-accion").dialog({
+                autoOpen: false,
+                height: 430,
+                width: 440,
+                modal: true,
+                buttons: {
+                    "Grabar": function() {
+                        //alert($("#campos_val").val());
+                        var bValid = true;
+                        //PRIMERO LO BUSCA?? pendiente                            
+                        //allFields.removeClass("ui-state-error");
+                        $("#inpt_gestfecha").removeClass("ui-state-error");
+                        $("#inpt_fecha").removeClass("ui-state-error");
+                        $("#inpt_hora").removeClass("ui-state-error");
+                        $("#inpt_lugar").removeClass("ui-state-error");
+                        $("#inpt_afp").removeClass("ui-state-error");
+                        $("#inpt_ram").removeClass("ui-state-error");
+                        $("#AccionSel").removeClass("ui-state-error");
+                        $("#ResultSel").removeClass("ui-state-error");
+                        $("#MotivoSel").removeClass("ui-state-error");
+
+                        bValid = bValid && checkRegexp($("#inpt_gestfecha"), /^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-](19|20)\d{2}$/, "El campo Fecha Gestión debe no es correcto");
+                        bValid = bValid && checkRegexp($("#AccionSel"), /^([1-99])+$/, "El campo Accion debe ser seleccionado");
+                        bValid = bValid && checkRegexp($("#ResultSel"), /^([1-99])+$/, "El campo Resultado debe ser seleccionado");
+
+                        //alert('Opcion1: '+$('#MotivoSel > option').size());
+                        //alert('Opcion2: '+$('MotivoSel option').length);
+
+                        if ($('#MotivoSel > option').size() > 1) {
+                            bValid = bValid && checkRegexp($("#MotivoSel"), /^([1-99])+$/, "El campo Motivo debe ser seleccionado");
+                        }
+
+                        var inputs = $.parseJSON($("#campos_val").val());
+                        $.each(inputs, function() {
+                            switch (this['campo']) {
+                                case 'inpt_fecha':
+                                    bValid = bValid && checkLength($("#inpt_fecha"), "Fecha", 10, 10);
+                                    bValid = bValid && checkRegexp($("#inpt_fecha"), /^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-](19|20)\d{2}$/, "El formato de la Fecha no es válido");
+                                    break
+                                case 'inpt_hora':
+                                    bValid = bValid && checkLength($("#inpt_hora"), "Hora", 6, 7);
+                                    bValid = bValid && checkRegexp($("#inpt_hora"), /^([1-9]|1\d|2[0-3]):([0-5]\d)(am|pm)$/, "El formato de la Hora no es válido");
+                                    break
+                                case 'inpt_lugar':
+                                    bValid = bValid && checkLength($("#inpt_lugar"), "Lugar", 0, 30);
+                                    bValid = bValid && checkRegexp($("#inpt_lugar"), /^([0-9a-zA-Z])+$/, "El campo Lugar solo puede tener letras un números");
+                                    break
+                                case 'inpt_afp':
+                                    bValid = bValid && checkLength($("#inpt_afp"), "Afp", 2, 15);
+                                    bValid = bValid && checkRegexp($("#inpt_afp"), /^([0-9a-zA-Z])+$/, "El campo Afp solo puede tener letras un números");
+                                    break
+                                case 'inpt_ram':
+                                    bValid = bValid && checkLength($("#inpt_ram"), "Ram", 1, 15);
+                                    bValid = bValid && checkRegexp($("#inpt_ram"), /^([0-9])+$/, "El campo Ram sólo puede contener números");
+                                    break
+                            }
+                        });
+                        if (bValid) {
+                            //alert('Grabar Gestion');
+                            var url = '{{ path("prospectos_gestion", 
+                                    {'producto': 'v_prod',                
+                                    'cuspp': 'v_cuspp',
+                                    'accion': 'v_acc',
+                                    'resultado': 'v_res',
+                                    'motivo': 'v_mot',
+                                    'fecha': 'v_fec',
+                                    'hora': 'v_hor', 
+                                    'lugar': 'v_lug',
+                                    'afp': 'v_afp',
+                                    'ram': 'v_ram',
+                                    'gestfecha': 'v_gestfecha'}) }}';
+                            url = url.replace("v_prod", isEmpty($('#ProdSel').val()));
+                            url = url.replace("v_cuspp", isEmpty($('#inpt_cuspp').val()));
+                            url = url.replace("v_acc", isEmpty($('#AccionSel').val()));
+                            url = url.replace("v_res", isEmpty($('#ResultSel').val()));
+                            url = url.replace("v_mot", isEmpty($('#MotivoSel').val()));
+                            url = url.replace("v_fec", isEmpty($('#inpt_fecha').val()));
+                            url = url.replace("v_hor", isEmpty($('#inpt_hora').val()));
+                            url = url.replace("v_lug", isEmpty($('#inpt_lugar').val()));
+                            url = url.replace("v_afp", isEmpty($('#inpt_afp').val()));
+                            url = url.replace("v_ram", isEmpty($('#inpt_ram').val()));
+                            url = url.replace("v_gestfecha", isEmpty($('#inpt_gestfecha').val()));
+                            //alert(url);
+                            location.href = url;
+                        }
+                    },
+                    Cancelar: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function() {
+                    $("#div_ram").html('');
+                    $("#div_afp").html('');
+                    $("#div_primer_nm").html('');
+                    $("#div_segundo_nm").html('');
+                    $("#div_primer_ap").html('');
+                    $("#div_segundo_ap").html('');
+                    $("#div_ruc").html('');
+                    $("#ram").show();
+                    $("#afp").show();
+                    $("#primer_nm").show();
+                    $("#segundo_nm").show();
+                    $("#primer_ap").show();
+                    $("#segundo_ap").show();
+                    $("#ruc").show();
+                    $("#div_mensaje").html('');
+                    tips.text('').removeClass("ui-state-highlight");
+                    allFields.val("").removeClass("ui-state-error");
+                }
+            });
+
+        });
+
+
+
+    </script>
+
+
+{% endblock %}

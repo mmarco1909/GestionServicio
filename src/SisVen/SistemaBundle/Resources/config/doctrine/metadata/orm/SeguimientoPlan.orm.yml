@@ -1,0 +1,124 @@
+SeguimientoPlan:
+    type: entity
+    table: seguimiento_plan
+    indexes:
+        fk_seguimiento_plan_seguimiento_accion1_idx:
+            columns:
+                - id_seguimiento_accion
+        fk_seguimiento_plan_estado_plan1_idx:
+            columns:
+                - id_estado_plan
+        fk_seguimiento_plan_usuario1_idx:
+            columns:
+                - id_usuario_lider
+        fk_seguimiento_plan_usuario2_idx:
+            columns:
+                - id_usuario_evaluado
+        fk_seguimiento_plan_producto1_idx:
+            columns:
+                - id_producto
+        fk_seguimiento_plan_proceso_etapa1_idx:
+            columns:
+                - id_proceso_etapa
+    id:
+        idSeguimientoPlan:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_seguimiento_plan
+            generator:
+                strategy: IDENTITY
+    fields:
+        fechaHora:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_hora
+        tipoMedicion:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: 'Evalua el resultado en número o en soles, esto no va en una tabla, va en codigo duro'
+            column: tipo_medicion
+        fechaInicio:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_fin
+        metaObjetivo:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: 'Es el objetivo que tiene que alcanzar en el periodo indicado en el plan de accion, puede ser en nro o en soles dependiendo lo que se haya seleccionado en el tipo_evaluacion, lo mide vs la bitacora historica que es donde están todas las acciones realizada'
+            column: meta_objetivo
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        idSeguimientoAccion:
+            targetEntity: SeguimientoAccion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_seguimiento_accion:
+                    referencedColumnName: id_seguimiento_accion
+            orphanRemoval: false
+        idEstadoPlan:
+            targetEntity: EstadoPlan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_estado_plan:
+                    referencedColumnName: id_estado_plan
+            orphanRemoval: false
+        idUsuarioLider:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario_lider:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idUsuarioEvaluado:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario_evaluado:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idProducto:
+            targetEntity: Producto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_producto:
+                    referencedColumnName: id_producto
+            orphanRemoval: false
+        idProcesoEtapa:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

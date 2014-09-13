@@ -1,0 +1,35 @@
+Rol:
+    type: entity
+    table: rol
+    id:
+        idRol:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_rol
+            generator:
+                strategy: IDENTITY
+    fields:
+        codRol:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_rol
+        rol:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Los roles pueden ser: Gerente Comercial, Gerente de Ventas, Gerente Regional, Jefe, Supervisor, Coordinador, Ejecutivo, Administrador, Planeamiento Comercial'
+        funcion:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: 'admin, ejecutivo, usuario, pc, null'
+    lifecycleCallbacks: {  }

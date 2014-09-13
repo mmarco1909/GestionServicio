@@ -1,0 +1,29 @@
+Region:
+    type: entity
+    table: region
+    id:
+        idRegion:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_region
+            generator:
+                strategy: IDENTITY
+    fields:
+        codRegion:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_region
+        region:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Las Regiones son las agrupaciones de las plazas'
+    lifecycleCallbacks: {  }

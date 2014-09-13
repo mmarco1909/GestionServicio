@@ -1,0 +1,502 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+Detalle de Prospecto
+{% endblock %}
+
+{% block stylesheets %}
+<style type="text/css" title="currentStyle">
+    @import "../../public/css/jquery.dataTables.demo_page.css";
+    @import "../../public/css/jquery.dataTables.demo_table_jui.css";
+    @import "../../public/themes/smoothness/jquery-ui-1.8.4.custom.css";
+    @import "../../public/css/start/jquery-ui-1.10.4.custom.css";
+
+    @import "../../public/css/jquery.timepicker.css";
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color:#333;
+    background: #CCCCCC;
+    z-index: 1;
+}
+
+h3 {
+    text-transform:capitalize;
+    font-family:Arial, Helvetica, sans-serif;
+}
+p {
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+    padding: 10px;
+}
+
+    .ui-front {
+        z-index:9999 !important; /* The default is 100. !important overrides the default. */
+    }
+
+    /*Modal Dialog*/
+    table {font-size: 1em;}
+    .demo-description {
+        clear: both;
+        padding: 12px;
+        font-size: 1.3em;
+        line-height: 1.4em;
+    }
+    .ui-draggable, .ui-droppable {
+        background-position: top;
+    } 
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }       
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+
+    .campo_oculto{visibility: hidden}
+    .campo_visible{visibility: visible}      
+
+    table.menu {
+        font-size:12px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #908d8d;
+        border-collapse: collapse;}
+    table.menu th {
+        font-size:12px;
+        background-color:#c0c0c0;
+        border-width: 1px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #908d8d;}
+    table.menu th.activo {
+        font-size:12px;
+        background-color:#f0f0f0;
+        border-width: 1px;
+        padding: 2px;
+        border-bottom: #f0f0f0;
+    }
+    table.menu tr {background-color:#f2efef;}
+    table.menu td {font-size:12px;border-width: 1px;padding: 3px;border-style: solid;border-color: #908d8d;}
+   
+</style>
+{% endblock %}
+
+{% block id 'mv_index' %}
+
+{% block body -%}
+<hr class="linea" />
+<div style="width: 100%">
+    <div style="float: left; width: 20px">&nbsp</div>  
+    <div style="float: left">        
+        <div class="txt1">Matrícula: {{ app.user.id}}  </div>
+        <div class="txt1">Usuario: {{ app.user.nombre }} {{ app.user.primerAp }}</div>        
+    </div>
+    <div style="float: right; width: 50px">&nbsp</div>   
+    <div style="float: right">
+<!--            <button onclick="{{ path('usuario_logout') }}" >Cerrar Sesión</button>
+-->
+            <a href="{{ path('usuario_logout') }}" class = "boton">Cerrar sesión</a>
+            <button onclick="window.history.back();" class="boton">Salir</button>
+
+    </div>       
+</div>
+
+<div style="clear: both"></div>
+<hr style="color: #0056b2;" />
+
+<div id="dialog-form" title="Agregar Telefonos">
+    <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+    <form id="f_busca_prospecto">
+        <fieldset>
+            <table cellpadding="2px">
+                <tr><td>Tipo Telefono (*)</td><td><div id="div_tipotel"></div>
+                        <select id="tipotel" name="tipotel">              
+                            <option selected>Casa</option>
+                            <option>Celular</option>
+                            <option>Oficina</option>
+                        </select> 
+                    </td><td></td>
+                </tr>
+                <tr><td>Numero Telefono</td><td><div id="div_numerotel"></div><input type='text' name='numerotel' id='numerotel' value='' maxlength='15' size='15'></td><td></td></tr>
+                <tr><td>Anexo</td><td><div id="div_anexo"></div><input type='text' name='anexo' id='anexo' value='' maxlength='15' size='15'></td><td></td></tr>
+            </table>                        
+        </fieldset>
+    </form>
+    <table>
+        <tr><td colspan="2"><div id="div_mensaje"></div></td></tr>
+    </table> 
+</div>
+
+<div id="dialog-email" title="Agregar Email">
+    <p class="validateTips">Los campos marcados con * son obligatorios.</p>
+    <form id="f_busca_email">
+        <fieldset>
+            <table cellpadding="2px">
+                <tr><td>Email</td><td><div id="div_email"></div><input type='text' name='email' id='email' value='' maxlength='50' size='50'></td><td></td></tr>
+            </table>                        
+        </fieldset>
+    </form>
+    <table>
+        <tr><td colspan="2"><div id="div_mensaje"></div></td></tr>
+    </table> 
+</div>
+
+<div id="dialog-tel" title="Telefonos Registrados">
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_telefonos">
+                <th>Tipo Telefono</th>
+                <th>Numero Telefono</th>
+                <th>Anexo</th>
+                <th>Fecha de Registro</th>
+                {% render url('telefonos_listar', {'cuspp': entity.cuspp }) %}
+    </table>
+</div>
+
+<div id="dialog-correo" title="Email Registrados">
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_telefonos">
+                <th>Email</th>
+                <th>Fecha de Registro</th>
+                {% render url('email_listar', {'cuspp': entity.cuspp }) %}
+    </table>
+</div>
+
+
+<div>
+    <table cellpadding="1" cellspacing="0" border="1" class="display">
+        <tr>
+            <td>
+            <h2>Informacion General</h2>
+            <table cellpadding="1" cellspacing="0" border="1" class="display">
+                <tr><th align="left">Cuspp</th><td>{{ entity.cuspp }}</td></tr>
+                <tr><th align="left">Prospecto</th><td>{{ entity.primerNm }} {{ entity.segundoNm }} {{ entity.primerAp }} {{ entity.segundoAp }}</td></tr>
+                <tr><th align="left">Sexo</th><td>{{ entity.sexo }}</td></tr>
+                <tr><th align="left">Fecha Nacimiento</th><td>{{ entity.fecNacimiento|date('d-m-Y') }}</td></tr>
+                <tr><th align="left">Documento</th><td>{{ entity.tipdoc }} - {{ entity.numdoc }}</td></tr>
+                <tr><th align="left">Murciélago</th><td>{{ entity.rangoRam }}</td></tr>
+                <tr><th align="left">Empresa</th><td>{{ entity.ruc }} - {{ entity.empresa }}</td></tr>    
+            </table>
+            </td>
+            <td>
+            <h2>Estado Actual</h2>
+            <table cellpadding="1" cellspacing="0" border="1" class="display">
+                <tr><th align="left">Estado del Prospecto</th><td>{{ entity.procesoestado }}</td></tr>
+                <tr><th align="left">Resultado</th><td>{{ entity.procesoresultado }}</td></tr>
+                <tr><th align="left">Motivo</th><td>{{ entity.procesomotivo }}</td></tr>
+                {% if entity.gestfechasiguiente == date('0000-00-00 00:00:00') or entity.gestfechasiguiente is null %}
+                <tr><th align="left">Fecha Siguiente Acción</th><td></td></tr>
+                <tr><th align="left">Hora Siguiente Acción</th><td></td></tr>
+                {% else %}
+                <tr><th align="left">Fecha Siguiente Acción</th><td>{{ entity.gestfechasiguiente|date("d/m/Y") }}</td></tr>
+                <tr><th align="left">Hora Siguiente Acción</th><td>{{ entity.gestfechasiguiente|date("H:i") }}</td></tr>
+                {% endif %}
+                <tr><th align="left">Afp</th><td>{{ entity.gestafp }}</td></tr>
+                <tr><th align="left">Ram</th><td>{{ entity.gestram }}</td></tr>
+            </table>   
+            </td>
+        </tr>
+
+    </table>
+     <div style="float: right; width: 50px">&nbsp</div>   
+
+    <table cellpadding="1" cellspacing="0" border="1" class="display">
+        <tr>
+            <th><h2>Telefonos</h2></th>
+            <td valign = "top">
+            <table cellpadding="1" cellspacing="0" border="1" class="display" id="p_telefonos">
+                <th align="left">Tipo Telefono</th>
+                <th align="left">Numero Telefono</th>
+                <th>Anexo</th>
+                <th>Fecha de Registro</th>
+                {% render url('telefonos_listar', {'cuspp': entity.cuspp }) %}
+            </table>
+            </td>
+            <th><h2>Emails</h2></th>
+
+            <td valign = "top">
+            <table cellpadding="1" cellspacing="0" border="1" class="display" id="p_telefonos">
+                <th align="left">Email</th>
+                <th align="left">Fecha de Registro</th>
+                {% render url('email_listar', {'cuspp': entity.cuspp }) %}
+            </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div style="background: #CCCCCC">
+    <table width="100%">
+        <tr>
+            <td><div class="txt3">Detalle de acciones</div></td>
+            <td>
+            </td>
+        </tr>            
+    </table>
+    <table>
+        <tr>
+            <td>
+                <button id="create-user" class="boton">Agregar Telefonos</button>
+                <button id="create-email" class="boton">Agregar Email</button>
+            </td>
+        </tr>
+    </table>              
+    <table cellpadding="0" cellspacing="0" border="0" class="display" id="p_bitacora">                    
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Fecha de Gestión</th>
+                <th>Etapa</th>    
+                <th>Resultado</th>
+                <th>Motivo</th>
+                <th>Lugar</th>
+                <th>Afp</th>
+                <th>Ram</th>
+                <th>Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" class="dataTables_empty">Cargando Información</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>                           
+                <th>Estado</th>
+                <th>Fecha de Gestión</th>
+                <th>Etapa</th>    
+                <th>Resultado</th>
+                <th>Motivo</th>
+                <th>Lugar</th>
+                <th>Afp</th>
+                <th>Ram</th>
+                <th>Fecha de Registro</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}   
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.dataTables.js"></script>
+<script type="text/javascript" language="javascript" src="../../public/js/jquery.timepicker.min.js"></script>
+
+<script src="../../public/js/jqueryui/jquery.ui.core.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.widget.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.mouse.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.draggable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.position.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.resizable.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.button.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.dialog.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.effect.js"></script>
+<script src="../../public/js/jqueryui/jquery.ui.datepicker.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        
+        $('.boton').button();
+        /*************************DataTables************************************************/
+        var calcDataTableHeight = function() {
+            return Math.floor($(window).height() * 60 / 100);
+        };
+
+        var url_prosp = '{{ path("prospectos_bitacora", {'cuspp': 'v_cuspp' }) }}';
+        url_prosp = url_prosp.replace("v_cuspp", '{{cuspp}}');
+        var oTable = $('#p_bitacora').dataTable({
+            "sScrollY": calcDataTableHeight(),
+            "bScrollCollapse": true,
+            "bPaginate": false,
+            "bJQueryUI": true,
+            "aoColumnDefs": [
+                {"sWidth": "10%", "aTargets": [-1]}
+            ],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": url_prosp
+
+        });        
+        
+  
+    $(window).resize(function() {
+            var oSettings = oTable.fnSettings();
+            oSettings.oScroll.sY = calcDataTableHeight();
+            oTable.fnDraw();
+        });
+
+
+        /*************************************User Interaction*******************************/
+        
+        $("#create-user").click(function() {
+            $("#dialog-form").dialog("open");
+            $("#tipotel").show();
+            $("#numerotel").show();
+            $("#anexo").show();
+        });
+        
+        $("#create-email").click(function() {
+            $("#dialog-email").dialog("open");
+            $("#email").show();
+        });
+        
+        $("#create-tel").click(function() {
+            $("#dialog-tel").dialog("open");
+            
+        });
+
+        $("#create-correo").click(function() {
+            $("#dialog-correo").dialog("open");
+            
+        });
+
+    /********************************Modal Dialog***********************************/
+        var     tipotel = $("#tipotel"),
+                numerotel = $("#numerotel"),
+                anexo = $("#anexo"),
+                email = $("#email"),
+                allFields = $([]).add(tipotel).add(numerotel).add(anexo).add(email),
+                tips = $(".validateTips"),
+                hideFields = $([]).add(tipotel).add(numerotel)
+                .add(anexo);
+        
+        function updateTips(t) {
+            tips.text(t).addClass("ui-state-highlight");
+        }
+
+        function checkLength(o, n, min, max) {
+            if (o.val().length > max || o.val().length < min) {
+                o.addClass("ui-state-error");
+                updateTips("El campo " + n + " debe de tener mínimo " +
+                        min + " caracteres y máximo " + max + ".");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function checkRegexp(o, regexp, n) {
+            if (!(regexp.test(o.val()))) {
+                o.addClass("ui-state-error");
+                updateTips(n);
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function isEmpty(val) {
+            return (val === undefined || val == null || val.length <= 0) ? 'x$_x' : val;
+        }
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 250,
+            modal: true,
+            buttons: {
+                "Agregar Telefono": function() {
+                    var bValid = true;
+                    allFields.removeClass("ui-state-error");
+                    bValid = bValid && checkLength(tipotel, "tipotel", 1, 15);
+                    bValid = bValid && checkLength(numerotel, "numerotel", 1, 20);
+                    bValid = bValid && checkLength(anexo, "anexo", 0, 15);
+                    bValid = bValid && checkRegexp(tipotel, /^([0-9a-zA-Z])+$/, "El campo Tipo Telefono sólo puede contener letras y números");
+                    bValid = bValid && checkRegexp(numerotel, /^([0-9])+$/, "El campo Numero Telefono sólo puede contener números");
+                    bValid = bValid && checkRegexp(anexo, /^([0-9])+$/, "El campo Anexo sólo puede contener números");
+                    if (bValid) {
+                        var url = '{{ path("telefonos_agregar", 
+                            {'cuspp': 'v_cuspp',
+                            'tipotel': 'v_tipotel',
+                            'numerotel': 'v_numerotel',
+                            'anexo':'v_anexo',
+                            'ruta': 'prospectos_show'}) }}';
+                        url = url.replace("v_cuspp", '{{cuspp}}');
+                        url = url.replace("v_tipotel", $('#tipotel').val());
+                        url = url.replace("v_numerotel", numerotel.val());
+                        url = url.replace("v_anexo", anexo.val());
+                        location.href = url;
+                        //$(this).dialog("close");
+                    }
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $("#div_tiptel").html('');
+                $("#div_numerotel").html('');
+                $("#div_anexo").html('');
+                $("#tiptel").show();
+                $("#numerotel").show();
+                $("#anexo").show();
+                $("#div_mensaje").html('');
+                tips.text('').removeClass("ui-state-highlight");
+                allFields.val("").removeClass("ui-state-error");
+            }
+        });
+
+        $("#dialog-email").dialog({
+            autoOpen: false,
+            height: 200,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Agregar Email": function() {
+                    var bValid = true;
+                    allFields.removeClass("ui-state-error");
+                    bValid = bValid && checkLength( email, "email", 6, 80 );
+                    bValid = bValid && checkRegexp( email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "Formato de correo invalido aa@bbb.com" );
+                    if (bValid) {
+                        var url = '{{ path("email_agregar", 
+                            {'cuspp': 'v_cuspp',
+                            'email': 'v_email',
+                            'ruta': 'prospectos_show'}) }}';
+                        url = url.replace("v_cuspp", '{{cuspp}}');
+                        url = url.replace("v_email", email.val());
+                        location.href = url;
+                        //$(this).dialog("close");
+                    }
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $("#div_email").html('');
+                $("#email").show();
+                $("#div_mensaje").html('');
+                tips.text('').removeClass("ui-state-highlight");
+                allFields.val("").removeClass("ui-state-error");
+            }
+        });
+
+        $("#dialog-tel").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                Cancel: function(){
+                    $(this).dialog("close");
+                }
+            }
+            
+        });
+        
+        $("#dialog-correo").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                Cancel: function(){
+                    $(this).dialog("close");
+                }
+            }
+            
+        });
+        
+    });
+
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+Organico:
+    type: entity
+    table: organico
+    indexes:
+        fk_organico_usuario1_idx:
+            columns:
+                - id_usuario
+        fk_organico_periodo1_idx:
+            columns:
+                - periodo
+        fk_organico_tipo_ffvv1:
+            columns:
+                - id_tipo_ffvv
+    id: {  }
+    fields:
+        organicoPpto:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: organico_ppto
+        organicoReal:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: organico_real
+    oneToOne:
+        idTipoFfvv:
+            targetEntity: TipoFfvv
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_ffvv:
+                    referencedColumnName: id_tipo_ffvv
+            orphanRemoval: false
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        periodo:
+            targetEntity: Periodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo:
+                    referencedColumnName: periodo
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

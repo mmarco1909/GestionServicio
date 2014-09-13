@@ -1,0 +1,30 @@
+TipoFfvv:
+    type: entity
+    table: tipo_ffvv
+    id:
+        idTipoFfvv:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_tipo_ffvv
+            generator:
+                strategy: IDENTITY
+    fields:
+        codTipoFfvv:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_tipo_ffvv
+        tipoFfvv:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: 'Las fuerzas de ventas son: Fuerza de Ventas Empresarial Lima, Fuerza de Ventas Exlcusiva Lima, siempre detallar si es Lima o Provincias'
+            column: tipo_ffvv
+    lifecycleCallbacks: {  }

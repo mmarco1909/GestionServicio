@@ -1,0 +1,78 @@
+Cartera:
+    type: entity
+    table: cartera
+    id:
+        idCartera:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            column: id_cartera
+            generator:
+                strategy: IDENTITY
+    fields:
+        codCartera:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: cod_cartera
+        cartera:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    manyToMany:
+        idUsuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: idCartera
+            joinTable:
+                name: asignacion_cartera
+                joinColumns:
+                    -
+                        name: id_cartera
+                        referencedColumnName: id_cartera
+                inverseJoinColumns:
+                    -
+                        name: id_usuario
+                        referencedColumnName: id_usuario
+            orderBy: null
+        idEmp:
+            targetEntity: Empresa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: idCart
+            joinTable:
+                name: cartera_empresas
+                joinColumns:
+                    -
+                        name: id_cart
+                        referencedColumnName: id_cartera
+                inverseJoinColumns:
+                    -
+                        name: id_emp
+                        referencedColumnName: id_empresa
+            orderBy: null
+        idEmpresa:
+            targetEntity: Empresa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: idCartera
+            joinTable:
+                name: empresas_cartera
+                joinColumns:
+                    -
+                        name: id_cartera
+                        referencedColumnName: id_cartera
+                inverseJoinColumns:
+                    -
+                        name: id_empresa
+                        referencedColumnName: id_empresa
+            orderBy: null
+    lifecycleCallbacks: {  }

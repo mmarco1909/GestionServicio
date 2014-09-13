@@ -1,0 +1,43 @@
+RangoRam:
+    type: entity
+    table: rango_ram
+    id:
+        idRangoRam:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+            id: true
+            column: id_rango_ram
+            generator:
+                strategy: IDENTITY
+    fields:
+        rangoRam:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+            column: rango_ram
+        ramIni:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 0
+            comment: ''
+            column: ram_ini
+        ramFin:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 0
+            comment: ''
+            column: ram_fin
+        murcielago:
+            type: string
+            nullable: false
+            length: 5
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

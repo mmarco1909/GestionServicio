@@ -1,0 +1,64 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Prospecto</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.idProducto }}</td>
+            </tr>
+            <tr>
+                <th>Cuspp</th>
+                <td>{{ entity.cuspp }}</td>
+            </tr>
+            <tr>
+                <th>Primernm</th>
+                <td>{{ entity.primerNm }}</td>
+            </tr>
+            <tr>
+                <th>Segundonm</th>
+                <td>{{ entity.segundoNm }}</td>
+            </tr>
+            <tr>
+                <th>Primerap</th>
+                <td>{{ entity.primerAp }}</td>
+            </tr>
+            <tr>
+                <th>Segundoap</th>
+                <td>{{ entity.segundoAp }}</td>
+            </tr>
+            <tr>
+                <th>Fecnacimiento</th>
+                <td>{{ entity.fecNacimiento|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Numdoc</th>
+                <td>{{ entity.numdoc }}</td>
+            </tr>
+            <tr>
+                <th>Direccion</th>
+                <td>{{ entity.rangoRam }}</td>
+            </tr>
+            <tr>
+                <th>Ram</th>
+                <td>{{ entity.ram }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('prospectos_index', {'id_prod_per': entity.idProducto } ) }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('prospectos_edit', { 'id': entity.idProducto }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

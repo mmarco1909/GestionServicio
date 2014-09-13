@@ -1,0 +1,52 @@
+Email:
+    type: entity
+    table: email
+    indexes:
+        fk_email_prospecto1_idx:
+            columns:
+                - id_prospecto
+        fk_email_estado_email1_idx:
+            columns:
+                - id_estado_email
+    id:
+        idEmail:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_email
+            generator:
+                strategy: IDENTITY
+    fields:
+        email:
+            type: string
+            nullable: false
+            length: 80
+            fixed: false
+            comment: ''
+        fechaAlta:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_alta
+    manyToOne:
+        idProspecto:
+            targetEntity: Prospecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_prospecto:
+                    referencedColumnName: id_prospecto
+            orphanRemoval: false
+        idEstadoEmail:
+            targetEntity: EstadoEmail
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_estado_email:
+                    referencedColumnName: id_estado_email
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

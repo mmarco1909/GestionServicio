@@ -1,0 +1,35 @@
+ProcesoAccion:
+    type: entity
+    table: proceso_accion
+    indexes:
+        fk_proceso_accion_proceso_etapa1_idx:
+            columns:
+                - id_proceso_etapa
+    id:
+        idProcesoAccion:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_proceso_accion
+            generator:
+                strategy: IDENTITY
+    fields:
+        accion:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        idProcesoEtapa:
+            targetEntity: ProcesoEtapa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_proceso_etapa:
+                    referencedColumnName: id_proceso_etapa
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

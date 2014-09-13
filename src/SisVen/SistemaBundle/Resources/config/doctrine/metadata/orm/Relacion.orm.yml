@@ -1,0 +1,88 @@
+Relacion:
+    type: entity
+    table: relacion
+    indexes:
+        fk_relacion_plaza1_idx:
+            columns:
+                - id_plaza
+        fk_relacion_rol1_idx:
+            columns:
+                - id_rol
+        fk_relacion_tipo_ffvv1_idx:
+            columns:
+                - id_tipo_ffvv
+        fk_relacion_usuario1_idx:
+            columns:
+                - id_usuario_lider
+        fk_relacion_usuario2_idx:
+            columns:
+                - id_usuario_subordinado
+    id:
+        idRelacion:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+            id: true
+            column: id_relacion
+            generator:
+                strategy: IDENTITY
+    fields:
+        fechaIniRel:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_ini_rel
+        fechaFinRel:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_fin_rel
+    manyToOne:
+        idPlaza:
+            targetEntity: Plaza
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_plaza:
+                    referencedColumnName: id_plaza
+            orphanRemoval: false
+        idRol:
+            targetEntity: Rol
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_rol:
+                    referencedColumnName: id_rol
+            orphanRemoval: false
+        idTipoFfvv:
+            targetEntity: TipoFfvv
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_tipo_ffvv:
+                    referencedColumnName: id_tipo_ffvv
+            orphanRemoval: false
+        idUsuarioLider:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario_lider:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+        idUsuarioSubordinado:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_usuario_subordinado:
+                    referencedColumnName: id_usuario
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

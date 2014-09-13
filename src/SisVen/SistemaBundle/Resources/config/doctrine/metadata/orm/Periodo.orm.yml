@@ -1,0 +1,33 @@
+Periodo:
+    type: entity
+    table: periodo
+    id:
+        periodo:
+            type: string
+            nullable: false
+            length: 6
+            fixed: false
+            comment: 'Esta llave se arma con la combinacion de año+mes'
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        anio:
+            type: string
+            nullable: false
+            length: 4
+            fixed: false
+            comment: ''
+        mes:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+        diasLaborables:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: dias_laborables
+    lifecycleCallbacks: {  }

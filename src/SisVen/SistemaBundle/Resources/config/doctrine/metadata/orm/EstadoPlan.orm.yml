@@ -1,0 +1,41 @@
+EstadoPlan:
+    type: entity
+    table: estado_plan
+    id:
+        idEstadoPlan:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_estado_plan
+            generator:
+                strategy: IDENTITY
+    fields:
+        cumpDesde:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: cump_desde
+        cumpHasta:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: cump_hasta
+        estado:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        icono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
