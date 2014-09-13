@@ -1,0 +1,179 @@
+sistema:
+    resource: "@SistemaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+SistemaBundle:
+    resource: "@SistemaBundle/Controller/"
+    type:     annotation
+    prefix:   /
+    
+prospectos_index:
+    path: /prospectos_index/{id_prod}
+    defaults: { _controller: SistemaBundle:Prospectos:index }
+    
+prospectos_icontactos:
+    path: /prospectos_icontactos/{id_prod}
+    defaults: { _controller: SistemaBundle:Prospectos:icontactos }
+    
+prospectos_icitas:
+    path: /prospectos_icitas/{id_prod}
+    defaults: { _controller: SistemaBundle:Prospectos:icitas }
+    
+prospectos_icierres:
+    path: /prospectos_icierres/{id_prod}
+    defaults: { _controller: SistemaBundle:Prospectos:icierres }
+    
+prospectos_inoexitosos:
+    path: /prospectos_inoexitosos/{id_prod}
+    defaults: { _controller: SistemaBundle:Prospectos:inoexitosos }
+
+prospectos_show:
+    path: /prospectos_show/{cuspp}
+    defaults: { _controller: SistemaBundle:Prospectos:show2 }
+    
+prospectos_listar:
+    path: /prospectos_listar/{id_prod}/{id_etapa}/{id_estado}
+    defaults: { _controller: SistemaBundle:Prospectos:listar }
+    
+prospectos_agenda:
+    path: /prospectos_agenda/
+    defaults: { _controller: SistemaBundle:Prospectos:agenda }
+
+prospectos_buscar:
+    path: /prospectos_buscar/{producto}/{cuspp}
+    defaults: { _controller: SistemaBundle:Prospectos:buscar }
+    
+prospectos_avance:
+    path: /prospectos_avance
+    defaults: { _controller: SistemaBundle:Prospectos:avance }
+    
+prospectos_grabar_seleccion:
+    path: /prospectos_grabar_seleccion/{producto}/{ids_prospectos}
+    defaults: { _controller: SistemaBundle:Prospectos:grabarseleccion }
+    
+prospectos_agregar:
+    path: /prospectos_agregar/{producto}/{cuspp}/{ram}/{afp}/{primer_nm}/{segundo_nm}/{primer_ap}/{segundo_ap}/{ruc}
+    defaults: { _controller: SistemaBundle:Prospectos:agregar }
+    
+prospectos_gestion:
+    path: /prospectos_gestion/{producto}/{cuspp}/{accion}/{resultado}/{motivo}/{fecha}/{hora}/{lugar}/{afp}/{ram}/{gestfecha}/{ruta}
+    defaults: { _controller: SistemaBundle:Prospectos:gestion }    
+    
+producto_listar:
+    path: /producto_listar/{id_prod}
+    defaults: { _controller: SistemaBundle:Producto:listar }
+    
+periodo_listar:
+    path: /periodo_listar/
+    defaults: { _controller: SistemaBundle:Periodo:listar }
+    
+afp_listar:
+    path: /afp_listar/
+    defaults: { _controller: SistemaBundle:Afp:listar }
+    
+usuario_redirect:
+    path: /usuario_redirect/
+    defaults: { _controller: SistemaBundle:Usuario:redirect }
+    
+proc_accion_listar:
+    path: /proc_accion_listar/{etapa}
+    defaults: { _controller: SistemaBundle:ProcesoAccion:listar }
+    
+proc_resultado_listar:
+    path: /proc_resultado_listar/{accion}
+    defaults: { _controller: SistemaBundle:ProcesoResultado:listar }
+    
+proc_resultado_inputs:
+    path: /proc_resultado_inputs/{resultado}
+    defaults: { _controller: SistemaBundle:ProcesoResultado:inputs }    
+    
+proc_motivo_listar:
+    path: /proc_motivo_listar/{resultado}
+    defaults: { _controller: SistemaBundle:ProcesoMotivo:listar }    
+
+prospectos_bitacora:
+    path: /prospectos_bitacora/{cuspp}
+    defaults: { _controller: SistemaBundle:ProspectosBitacora:listar }    
+
+prospectos_bitacora_asesor:
+    path: /prospectos_bitacora_asesor/{cuspp}
+    defaults: { _controller: SistemaBundle:ProspectosBitacora:listado }    
+
+produccion_apv:
+    path: /produccion_apv/{id_prod}
+    defaults: { _controller: SistemaBundle:Produccionapv:ingresoapv }
+
+produccionapv_listar:
+    path: /produccionapv_listar/{id_prod}
+    defaults: { _controller: SistemaBundle:Produccionapv:listar }
+
+produccionapv_agregar:
+    path: /produccionapv_agregar/{producto}/{cuspp}/{ram}/{aporte}/{primer_nm}/{segundo_nm}/{primer_ap}/{segundo_ap}/{fecha}/{ruta}
+    defaults: { _controller: SistemaBundle:Produccionapv:agregar }
+
+produccionapv_buscar:
+    path: /produccionapv_buscar/{cuspp}
+    defaults: { _controller: SistemaBundle:Produccionapv:buscar }
+
+usuario_logout:
+    pattern: /usuario/logout
+
+telefonos_agregar:
+    path: /telefonos_agregar/{cuspp}/{tipotel}/{numerotel}/{anexo}/{ruta}
+    defaults: { _controller: SistemaBundle:Telefono:agregar }
+
+telefonos_listar:
+    path: /telefonos_listar/{cuspp}
+    defaults: { _controller: SistemaBundle:Telefono:listado }
+
+email_agregar:
+    path: /email_agregar/{cuspp}/{email}/{ruta}
+    defaults: { _controller: SistemaBundle:Email:agregar }
+
+email_listar:
+    path: /email_listar/{cuspp}
+    defaults: { _controller: SistemaBundle:Email:listado }
+
+equipo_listar:
+    path: /equipo_listar/{id_prod}/{matricula}
+    defaults: { _controller: SistemaBundle:Supervisor:listar }
+
+asesores_show:
+    path: /asesores_show/{matricula}
+    defaults: { _controller: SistemaBundle:Supervisor:show }
+
+asesores_listar:
+    path: /asesores_listar/{matricula}/{id_prod}/{id_etapa}/{id_estado}
+    defaults: { _controller: SistemaBundle:Supervisor:listado }
+
+prospectos_asesor:
+    path: /prospectos_asesor/{cuspp}
+    defaults: { _controller: SistemaBundle:Supervisor:show2 }
+
+supervisor_agenda:
+    path: /supervisor_agenda/
+    defaults: { _controller: SistemaBundle:Supervisor:agenda }
+
+asesor_agenda:
+    path: /asesor_agenda/{matricula}
+    defaults: { _controller: SistemaBundle:Supervisor:agenda2 }
+
+regiones_listar:
+    path: /regiones_listar/{id_prod}/{matricula}
+    defaults: { _controller: SistemaBundle:GerenteRegional:listar }
+
+supervisor_show:
+    path: /supervisor_show/{matricula}
+    defaults: { _controller: SistemaBundle:GerenteRegional:show }
+
+equipo_listar_sup:
+    path: /equipo_listar_sup/{matricula}
+    defaults: { _controller: SistemaBundle:Supervisor:listarSup }
+
+regionales_listar:
+    path: /regionales_listar/{id_prod}
+    defaults: { _controller: SistemaBundle:GerenteVenta:listar }
+
+gerente_show:
+    path: /gerente_show/{matricula}
+    defaults: { _controller: SistemaBundle:GerenteVenta:show }

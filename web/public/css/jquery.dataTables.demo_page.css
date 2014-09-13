@@ -1,0 +1,41 @@
+#mv_index {
+	font: 60%/1.45em "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #333;
+}
+
+#mv_index #container {
+	width: 100%;
+	margin: 0px auto;
+	padding: 0;
+}
+
+#mv_index #demo {
+	margin: 0px auto 0 auto;
+}
+
+.linea{
+    color: #0056b2;
+}
+
+.txt1{
+    font: 150%/1.45em "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.txt3{
+    font-size:20px;
+}
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * General page setup
+ */
+
+#mv_index a {
+	color: #000;
+	text-decoration: none;
+}
+
+#mv_index a:hover {
+	text-decoration: none;
+}
+

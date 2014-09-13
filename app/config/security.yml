@@ -1,0 +1,26 @@
+# app/config/security.yml
+security:
+    firewalls:
+        frontend:
+            pattern: ^/*
+            anonymous: ~
+            form_login:
+                login_path: /usuario/login
+                check_path: /usuario/login_check
+                #default_target_path: /afp
+                #always_use_default_target_path: true
+            logout:
+                path: /usuario/logout
+                target: /usuario/login
+                
+    access_control:
+        - { path: ^/usuario/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/usuario/registro, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/*, roles: [ROLE_ASESOR, ROLE_SUPERVISOR] }
+
+    providers:
+        usuarios:
+            entity: { class: SisVen\SistemaBundle\Entity\Usuario, property: id }
+
+    encoders:
+        Sisven\SistemaBundle\Entity\Usuario: plaintext
